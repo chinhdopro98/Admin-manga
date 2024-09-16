@@ -29,5 +29,8 @@ export const commentApi = '/comments';
 //mangas
 export const mangaApi = '/mangas';
 
+//auth
+export const authApi = '/auth';
+
 //manga
 

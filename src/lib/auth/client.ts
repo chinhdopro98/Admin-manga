@@ -1,5 +1,7 @@
 'use client';
 
+import { authGetRequest, authLogin } from '@/redux/actions/auth';
+
 import type { User } from '@/types/user';
 
 function generateToken(): string {
@@ -7,14 +9,6 @@ function generateToken(): string {
   window.crypto.getRandomValues(arr);
   return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
 }
-
-const user = {
-  id: 'USR-000',
-  avatar: '/assets/avatar.png',
-  firstName: 'Sofia',
-  lastName: 'Rivers',
-  email: 'sofia@devias.io',
-} satisfies User;
 
 export interface SignUpParams {
   firstName: string;
@@ -53,18 +47,18 @@ class AuthClient {
 
   async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
     const { email, password } = params;
-
-    // Make API request
-
-    // We do not handle the API, so we'll check if the credentials match with the hardcoded ones.
-    if (email !== 'sofia@devias.io' || password !== 'Secret1') {
-      return { error: 'Invalid credentials' };
+    try {
+      const response = await authLogin({ email, password });
+      const data = response.data;
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+        const user = await authGetRequest();
+        localStorage.setItem('userProfile', JSON.stringify({ ...data, ...user.data }));
+      }
+      return data;
+    } catch (error) {
+      return { error: 'Please check your email and password.' };
     }
-
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
-
-    return {};
   }
 
   async resetPassword(_: ResetPasswordParams): Promise<{ error?: string }> {
@@ -76,21 +70,23 @@ class AuthClient {
   }
 
   async getUser(): Promise<{ data?: User | null; error?: string }> {
-    // Make API request
+    try {
+      const data = localStorage.getItem('userProfile');
 
-    // We do not handle the API, so just check if we have a token in localStorage.
-    const token = localStorage.getItem('custom-auth-token');
+      if (!data) {
+        return { data: null };
+      }
+      const parsedData: User = JSON.parse(data);
 
-    if (!token) {
-      return { data: null };
+      return { data: parsedData };
+    } catch (error) {
+      return { error: 'An unknown error occurred' };
     }
-
-    return { data: user };
   }
 
   async signOut(): Promise<{ error?: string }> {
-    localStorage.removeItem('custom-auth-token');
-
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userProfile');
     return {};
   }
 }

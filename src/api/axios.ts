@@ -14,8 +14,7 @@ const apiClient = axios.create({
 // Xử lý phản hồi và lỗi toàn cục (các interceptor)
 apiClient.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem('access_token');
-    const token = '68|5w9H8KyD7YE6K2PT0YJHUQqPtjlLum8JgB93ybzJ';
+    const token = localStorage.getItem('authToken');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

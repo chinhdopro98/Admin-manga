@@ -8,6 +8,12 @@ export interface BasicData {
   loading: boolean;
 }
 
+//auth
+export interface PayloadLogin {
+  email: string;
+  password: string;
+}
+
 // user
 export interface Pagination {
   count: number;
