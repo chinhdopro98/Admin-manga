@@ -10,7 +10,6 @@ export interface Selection<T = string> {
   selectedAll: boolean;
 }
 
-// IMPORTANT: To prevent infinite loop, `keys` argument must be memoized with React.useMemo hook.
 export function useSelection<T = string>(keys: T[] = []): Selection<T> {
   const [selected, setSelected] = React.useState<Set<T>>(new Set());
 

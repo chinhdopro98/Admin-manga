@@ -17,42 +17,27 @@ import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
 import { useSelection } from '@/hooks/use-selection';
+import { IUser } from '@/redux/interfaces/interfaces';
 
 function noop(): void {
   // do nothing
 }
-
-export interface Customer {
-  id: string;
-  avatar: string;
-  name: string;
-  email: string;
-  address: { city: string; state: string; country: string; street: string };
-  phone: string;
-  createdAt: Date;
-}
-
-interface CustomersTableProps {
+interface UsersTableProps {
   count?: number;
   page?: number;
-  rows?: Customer[];
+  users?: IUser[];
   rowsPerPage?: number;
 }
 
 export function CustomersTable({
   count = 0,
-  rows = [],
+  users = [],
   page = 0,
   rowsPerPage = 0,
-}: CustomersTableProps): React.JSX.Element {
+}: UsersTableProps): React.JSX.Element {
   const rowIds = React.useMemo(() => {
-    return rows.map((customer) => customer.id);
-  }, [rows]);
-
-  const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
-
-  const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
-  const selectedAll = rows.length > 0 && selected?.size === rows.length;
+    return users.map((user) => user.id);
+  }, [users]);
 
   return (
     <Card>
@@ -60,56 +45,33 @@ export function CustomersTable({
         <Table sx={{ minWidth: '800px' }}>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedAll}
-                  indeterminate={selectedSome}
-                  onChange={(event) => {
-                    if (event.target.checked) {
-                      selectAll();
-                    } else {
-                      deselectAll();
-                    }
-                  }}
-                />
-              </TableCell>
+              <TableCell>User ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Signed Up</TableCell>
+              <TableCell>Tổng điểm</TableCell>
+              <TableCell>Điểm dùng</TableCell>
+              <TableCell>Hạn cấm</TableCell>
+              <TableCell>Tạo lúc</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => {
-              const isSelected = selected?.has(row.id);
+            {users.map((user) => {
+
 
               return (
-                <TableRow hover key={row.id} selected={isSelected}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          selectOne(row.id);
-                        } else {
-                          deselectOne(row.id);
-                        }
-                      }}
-                    />
-                  </TableCell>
+                <TableRow hover key={user.id} >
+                  <TableCell>{user.id}</TableCell>
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Avatar src={row.avatar} />
-                      <Typography variant="subtitle2">{row.name}</Typography>
+                      <Avatar src={user.avatar_full_url} />
+                      <Typography variant="subtitle2">{user.name}</Typography>
                     </Stack>
                   </TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>
-                    {row.address.city}, {row.address.state}, {row.address.country}
-                  </TableCell>
-                  <TableCell>{row.phone}</TableCell>
-                  <TableCell>{dayjs(row.createdAt).format('MMM D, YYYY')}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.total_points}</TableCell>
+                  <TableCell>{user.used_points}</TableCell>
+                  <TableCell>{user.banned_until ? null : dayjs(user.banned_until).format('MMM D, YYYY')}</TableCell>
+                  <TableCell>{dayjs(user.created_at).format('MMM D, YYYY')}</TableCell>
                 </TableRow>
               );
             })}
