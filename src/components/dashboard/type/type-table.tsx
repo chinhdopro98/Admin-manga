@@ -11,14 +11,14 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
-import { IAuthor } from '@/redux/interfaces/interfaces';
+import { IAuthor, IType } from '@/redux/interfaces/interfaces';
 function noop(): void {
   // do nothing
 }
 interface TypeMangaTableProps {
   count?: number;
   page?: number;
-  types?: IAuthor[];
+  types?: IType[];
   rowsPerPage?: number;
 }
 
@@ -47,7 +47,7 @@ export function TypeMangaTable({
           </TableHead>
           <TableBody>
             {types.map((type) => {
-              console.log(type,21312312)
+              console.log(type, 21312312)
               return (
                 <TableRow hover key={type.id} >
                   <TableCell>{type.id}</TableCell>

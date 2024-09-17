@@ -2,14 +2,18 @@
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Card, CardContent, FormControl, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
-const OtherInfoDetail: React.FC = () => {
+import { Card, CardContent } from '@mui/material';
+import { IManga } from '@/redux/interfaces/interfaces';
+interface MangaDetailProps {
+    manga?: IManga | null;
+}
+
+const OtherInfoDetail: React.FC<MangaDetailProps> = ({ manga }) => {
     return (
         <Card >
             <CardContent>
                 <Box>
-
-                    <img src='http://localhost:8000/storage/images/covers/d4626f96-3f2b-413a-a585-f2189d01b344.jpg?w=' style={{ width: "100%", height: "220px" }} />
+                    <img src={manga?.cover_full_url} style={{ width: "100%", height: "220px" }} />
                 </Box>
 
             </CardContent>

@@ -4,17 +4,34 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useParams } from 'next/navigation';
 import LoadingPopup from '@/components/core/loadding';
-import { useAppSelector } from '@/hooks/use-hook-redux';
+import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
 import { RootState } from '@/redux/stores';
 import { Grid, Stack, Typography } from '@mui/material';
 import InformationDetail from '@/components/dashboard/detail/information';
 import OtherInfoDetail from '@/components/dashboard/detail/other-infor';
+import { getMangaSingle } from '@/redux/actions/manga';
+import { useRouter } from 'next/navigation';
+
 const MangaDetail: React.FC = () => {
+  const router = useRouter();
   const { id } = useParams();
-  const rowsPerPage = 12;
-  const sort = '-created_at';
   const include = 'group,user,genres,artist,doujinshi';
   const loading = useAppSelector((state: RootState) => state.manga.loading);
+  const manga = useAppSelector((state: RootState) => state.manga.manga);
+  const error = useAppSelector((state: RootState) => state.manga.error);
+  const dispatch = useAppDispatch();
+  React.useEffect(() => {
+    const mangaId = Array.isArray(id) ? id[0] : id;
+    if (mangaId) {
+      dispatch(getMangaSingle({ include, id: mangaId }));
+    }
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    if (error) {
+      router.push('/not-found');
+    }
+  }, [loading, manga, router]);
   return (
     <Box>
       <LoadingPopup open={loading} />
@@ -24,10 +41,10 @@ const MangaDetail: React.FC = () => {
         </Stack>
         <Grid container spacing={5}> {/* Adjust spacing as needed */}
           <Grid item lg={8} md={6} xs={12}>
-            <InformationDetail />
+            <InformationDetail manga={manga} />
           </Grid>
           <Grid item lg={4} md={6} xs={12}>
-            <OtherInfoDetail />
+            <OtherInfoDetail manga={manga} />
           </Grid>
         </Grid>
       </Stack>

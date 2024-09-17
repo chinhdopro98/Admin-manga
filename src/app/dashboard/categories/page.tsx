@@ -11,19 +11,24 @@ import { ICategory } from '@/redux/interfaces/interfaces';
 import { getCategories } from '@/redux/actions/category';
 import { CategoriesFilters } from '@/components/dashboard/category/category-filter';
 import { CategoriesTable } from '@/components/dashboard/category/category-table';
+import { Box } from '@mui/material';
+import LoadingPopup from '@/components/core/loadding';
 export default function Page(): React.JSX.Element {
   const page = 1;
   const rowsPerPage = 50;
   const sort = '-id';
   const categories = useAppSelector((state: RootState) => state.category.categories);
   const pagination = useAppSelector((state: RootState) => state.category.pagination);
+  const loading = useAppSelector((state: RootState) => state.category.loading);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getCategories({ page, per_page: rowsPerPage, sort }));
   }, [dispatch]);
   const paginatedCustomers = applyPagination(categories, page, rowsPerPage);
   return (
-    <Stack spacing={3}>
+    <Box>
+      <LoadingPopup open={loading} />
+      <Stack spacing={3}>
       <Stack direction="row" spacing={3}>
       <Typography variant="h4">Thể loại</Typography>
       </Stack>
@@ -35,6 +40,7 @@ export default function Page(): React.JSX.Element {
         rowsPerPage={pagination.totalPages}
       />
     </Stack>
+    </Box>
   );
 }
 

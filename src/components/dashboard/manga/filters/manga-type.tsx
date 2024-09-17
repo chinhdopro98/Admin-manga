@@ -7,20 +7,29 @@ import useDebounce from '@/hooks/use-hook-debound';
 import { resetTypes } from '@/redux/reducers/type';
 import { searchTypes } from '@/redux/actions/type';
 
-export const MangaTypeFilters: React.FC = () => {
-    const [value, setValue] = React.useState<IType | null>(null);
-    const dispatch = useAppDispatch();
+interface TypeMangaProps {
+    type?: IType | null;
+}
+
+export const MangaTypeFilters: React.FC<TypeMangaProps> = ({ type }) => {
+    const [value, setValue] = React.useState<IType | null>(type|| null);
     const [inputValue, setInputValue] = React.useState<string>('');
+    const dispatch = useAppDispatch();
     const types = useAppSelector((state: RootState) => state.type.types);
     const loading = useAppSelector((state: RootState) => state.type.loading);
     const debouncedQuery = useDebounce(inputValue);
     React.useEffect(() => {
+        setValue(type|| null);
+    }, [type]);
+    React.useEffect(() => {
         if (debouncedQuery.trim() === '') {
             dispatch(resetTypes());
+            setValue(type|| null);
         } else {
             dispatch(searchTypes(debouncedQuery));
         }
     }, [debouncedQuery, dispatch]);
+
     return (
         <Autocomplete
             value={value}
@@ -35,12 +44,6 @@ export const MangaTypeFilters: React.FC = () => {
             loading={loading}
             renderInput={(params) => (
                 <TextField
-                    sx={{
-                        maxWidth: "100%",
-                        '& .MuiInputBase-root': {
-                            height: '50px',
-                        },
-                    }}
                     {...params}
                     label="Search"
                     variant="outlined"
@@ -57,4 +60,4 @@ export const MangaTypeFilters: React.FC = () => {
             )}
         />
     );
-}
+};

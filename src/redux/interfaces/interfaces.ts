@@ -67,11 +67,16 @@ export interface GetAllMangaParams {
   include?: string;
 }
 
+export interface GetMangaSingle {
+  include?: string;
+  id?: string
+}
 export interface MangaState {
   loading: boolean;
   mangas: IManga[];
   pagination: Pagination;
   error?: string | null;
+  manga?: IManga | null;
 }
 
 export interface IManga {
@@ -173,9 +178,9 @@ export interface IType{
   slug: string;
   name: string;
   user_id: string;
-  created_at: string;
-  updated_at: string;
-  user: IUser;
+  created_at?: string;
+  updated_at?: string;
+  user?: IUser;
 }
 
 //group

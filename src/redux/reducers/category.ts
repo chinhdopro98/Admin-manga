@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getCategories } from '../actions/category';
+import { getCategories, selectAllCategories } from '../actions/category';
 import { CategoryState } from '../interfaces/interfaces';
 
 const initialState: CategoryState = {
@@ -30,9 +30,20 @@ const CategorySlice = createSlice({
         state.categories = action.payload.data;
         state.pagination = action.payload.pagination;
         state.loading = false;
-        state.error = null;
       })
       .addCase(getCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      .addCase(selectAllCategories.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(selectAllCategories.fulfilled, (state, action) => {
+        state.categories = action.payload.data;
+        state.loading = false;
+      })
+      .addCase(selectAllCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

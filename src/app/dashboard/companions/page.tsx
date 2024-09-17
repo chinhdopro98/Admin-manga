@@ -8,6 +8,8 @@ import { ICompanion } from '@/redux/interfaces/interfaces';
 import { getCompanions } from '@/redux/actions/companion';
 import { CompanionsTable } from '@/components/dashboard/companion/companion-table';
 import { CompanionFilters } from '@/components/dashboard/companion/companion-filter';
+import { Box } from '@mui/material';
+import LoadingPopup from '@/components/core/loadding';
 
 export default function Page(): React.JSX.Element {
     const page = 1;
@@ -16,24 +18,28 @@ export default function Page(): React.JSX.Element {
     const include = 'user';
     const companions = useAppSelector((state: RootState) => state.companion.companions);
     const pagination = useAppSelector((state: RootState) => state.companion.pagination);
+    const loading = useAppSelector((state: RootState) => state.companion.loading);
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(getCompanions({ page, per_page: rowsPerPage, sort, include }));
     }, [dispatch]);
     const paginatedCustomers = applyPagination(companions, page, rowsPerPage);
     return (
-        <Stack spacing={3}>
-            <Stack direction="row" spacing={3}>
-                <Typography variant="h4">Bạn đồng hành</Typography>
+        <Box>
+            <LoadingPopup open={loading} />
+            <Stack spacing={3}>
+                <Stack direction="row" spacing={3}>
+                    <Typography variant="h4">Bạn đồng hành</Typography>
+                </Stack>
+                <CompanionFilters />
+                <CompanionsTable
+                    count={pagination.count}
+                    page={pagination.currentPage}
+                    companions={companions}
+                    rowsPerPage={pagination.totalPages}
+                />
             </Stack>
-            <CompanionFilters />
-            <CompanionsTable
-                count={pagination.count}
-                page={pagination.currentPage}
-                companions={companions}
-                rowsPerPage={pagination.totalPages}
-            />
-        </Stack>
+        </Box>
     );
 }
 

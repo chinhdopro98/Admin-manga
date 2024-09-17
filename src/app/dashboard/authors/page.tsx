@@ -8,6 +8,8 @@ import { IAuthor } from '@/redux/interfaces/interfaces';
 import { AuthorFilters } from '@/components/dashboard/author/author-filter';
 import { AuthorsTable } from '@/components/dashboard/author/author-table';
 import { getAuhtors } from '@/redux/actions/author';
+import { Box } from '@mui/material';
+import LoadingPopup from '@/components/core/loadding';
 
 export default function Page(): React.JSX.Element {
     const page = 1;
@@ -16,24 +18,28 @@ export default function Page(): React.JSX.Element {
     const include = 'user';
     const authors = useAppSelector((state: RootState) => state.author.authors);
     const pagination = useAppSelector((state: RootState) => state.author.pagination);
+    const loading = useAppSelector((state: RootState) => state.author.loading);
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(getAuhtors({ page, per_page: rowsPerPage, sort, include }));
     }, [dispatch]);
     const paginatedCustomers = applyPagination(authors, page, rowsPerPage);
     return (
-        <Stack spacing={3}>
-            <Stack direction="row" spacing={3}>
-                <Typography variant="h4">Tác giả</Typography>
+        <Box>
+            <LoadingPopup open={loading} />
+            <Stack spacing={3}>
+                <Stack direction="row" spacing={3}>
+                    <Typography variant="h4">Tác giả</Typography>
+                </Stack>
+                <AuthorFilters />
+                <AuthorsTable
+                    count={pagination.count}
+                    page={pagination.currentPage}
+                    authors={authors}
+                    rowsPerPage={pagination.totalPages}
+                />
             </Stack>
-            <AuthorFilters />
-            <AuthorsTable
-                count={pagination.count}
-                page={pagination.currentPage}
-                authors={authors}
-                rowsPerPage={pagination.totalPages}
-            />
-        </Stack>
+        </Box>
     );
 }
 
