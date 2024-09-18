@@ -1,6 +1,8 @@
+import dynamic from 'next/dynamic';
 import * as React from 'react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 interface TypePilotProps {
     text?: string;

@@ -8,8 +8,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
-import dayjs from 'dayjs';
-import { config } from '@/config';
 import { MangaCard } from '@/components/dashboard/manga/mangas-card';
 import { MangaFilters } from '@/components/dashboard/manga/mangas-filters';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
@@ -43,7 +41,7 @@ export default function Page(): React.JSX.Element {
           </Stack>
           <div>
             <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-              Add
+              Tạo mới
             </Button>
           </div>
         </Stack>

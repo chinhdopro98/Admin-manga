@@ -11,7 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
-import { IAuthor, IType } from '@/redux/interfaces/interfaces';
+import { IType } from '@/redux/interfaces/interfaces';
 function noop(): void {
   // do nothing
 }

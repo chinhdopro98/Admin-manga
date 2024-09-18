@@ -61,10 +61,15 @@ export interface UsersState {
 //mangas
 
 export interface GetAllMangaParams {
-  page: number;
-  per_page: number;
+  page?: number;
+  per_page?: number;
   sort?: string;
   include?: string;
+}
+
+export interface GetAllChapterParams {
+  id?: string;
+  per_page?: number;
 }
 
 export interface GetMangaSingle {
@@ -77,6 +82,7 @@ export interface MangaState {
   pagination: Pagination;
   error?: string | null;
   manga?: IManga | null;
+  chapters: IChapter[];
 }
 
 export interface IManga {
@@ -108,6 +114,19 @@ export interface IManga {
   doujinshi: IType;
 }
 
+
+export interface IChapter {
+  id: string;
+  slug: string;
+  user_id: string;
+  manga_id: string;
+  name: string;
+  content: string[]; 
+  views: number;
+  order: number;
+  created_at: string; 
+  updated_at: string; 
+}
 // Category
 export interface GetAllCategoryParams {
   page: number;

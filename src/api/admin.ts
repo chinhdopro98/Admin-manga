@@ -32,5 +32,8 @@ export const mangaApi = '/mangas';
 //auth
 export const authApi = '/auth';
 
+//chapter
+export const chapterApi = '/chapters';
+
 //manga
 

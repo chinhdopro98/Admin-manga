@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getMangas, getMangaSingle } from '../actions/manga';
+import { getChapters, getMangas, getMangaSingle } from '../actions/manga';
 import { MangaState } from '../interfaces/interfaces';
 
 const initialState: MangaState = {
   loading: false,
   mangas: [],
   manga: null,
+  chapters: [],
   pagination: {
     count: 0,
     currentPage: 0,
@@ -45,6 +46,18 @@ const MangaSlice = createSlice({
         state.loading = false;
       })
       .addCase(getMangaSingle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      .addCase(getChapters.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getChapters.fulfilled, (state, action) => {
+        state.chapters = action.payload.data;
+        state.loading = false;
+      })
+      .addCase(getChapters.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
