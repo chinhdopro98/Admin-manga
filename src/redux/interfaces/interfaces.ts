@@ -83,6 +83,7 @@ export interface MangaState {
   error?: string | null;
   manga?: IManga | null;
   chapters: IChapter[];
+  chapter?: IChapter | null;
 }
 
 export interface IManga {

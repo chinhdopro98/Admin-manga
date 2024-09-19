@@ -71,7 +71,7 @@ export function MangaCard({ manga }: MangaCardProps): React.JSX.Element {
               <Box>
                 {
                   manga?.genres?.map((genre) => (
-                    <Chip label={genre.name} sx={{ background: '#2e95ea;', fontSize: '10px', height: '25px', lineHeight: '25px', mr: "5px", fontWeight: "bold" }} />
+                    <Chip key={genre?.id} label={genre.name} sx={{ background: '#2e95ea;', fontSize: '10px', height: '25px', lineHeight: '25px', mr: "5px", fontWeight: "bold" }} />
                   ))
                 }
               </Box>

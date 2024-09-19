@@ -3,22 +3,24 @@ import Card from '@mui/material/Card';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { MangaGroupFilters } from './filters/manga-group';
-import { MangaUserFilters } from './filters/manga-user';
-import { MangaAuthorFilters } from './filters/manga-author';
-import { MangaTypeFilters } from './filters/manga-type';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { MangaGroupForm } from '../core/form/manga-group';
+import { MangaCreatorForm } from '../core/form/manga-creator';
+import { MangaAuthorForm } from '../core/form/manga-author';
+import { MangaTypeForm } from '../core/form/manga-type';
+import { MangaTitleForm } from '../core/form/manga-title';
+
 const states = [
   {
-    value: 0,
+    value: '0',
     label: "Tất cả"
   },
   {
-    value: 1,
+    value: '1',
     label: "Chờ duyệt"
   },
   {
-    value: 2,
+    value: '2',
     label: "Đã duyệt"
   }
 ];
@@ -28,58 +30,28 @@ export function MangaFilters(): React.JSX.Element {
     <Card sx={{ p: 2 }}>
       <Grid container spacing={2}>
         <Grid xs={12} sm={6} sx={{ padding: "10px 20px" }}>
-          <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Tên truyện, tên khác</InputLabel>
-          <FormControl fullWidth>
-            <OutlinedInput
-              defaultValue=""
-              fullWidth
-              placeholder="Search userId"
-              startAdornment={
-                <InputAdornment position="start">
-                  <MagnifyingGlassIcon fontSize="var(--icon-fontSize-md)" />
-                </InputAdornment>
-              }
-              sx={{
-                maxWidth: "100%",
-
-                height: '50px',
-              }}
-            />
-          </FormControl>
+          <MangaTitleForm />
         </Grid>
         <Grid xs={12} sm={6} sx={{ padding: "10px 20px" }}>
-          <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Nhóm dịch</InputLabel>
-          <FormControl fullWidth>
-            <MangaGroupFilters />
-          </FormControl>
+          <MangaGroupForm />
         </Grid>
         <Grid xs={12} sm={6} sx={{ padding: "10px 20px" }}>
-          <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Người đăng</InputLabel>
-          <FormControl fullWidth>
-            <MangaUserFilters />
-          </FormControl>
+          <MangaCreatorForm />
         </Grid>
         <Grid xs={12} sm={6} sx={{ padding: "10px 20px" }}>
-          <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Tác giả</InputLabel>
-          <FormControl fullWidth variant="outlined">
-            <MangaAuthorFilters />
-          </FormControl >
+          <MangaAuthorForm />
         </Grid>
         <Grid xs={12} sm={6} sx={{ padding: "10px 20px" }}>
-          <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Kiểu truyện</InputLabel>
-          <FormControl fullWidth variant="outlined">
-            <MangaTypeFilters />
-          </FormControl >
+          <MangaTypeForm />
         </Grid>
         <Grid xs={12} sm={6} sx={{ padding: "10px 20px" }}>
           <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Duyệt</InputLabel>
           <FormControl fullWidth variant="outlined">
             <Select
               labelId="state-label"
-              defaultValue="ny"
               label="State"
               name="state"
-              defaultValue={0}
+              defaultValue={'0'}
               fullWidth
               sx={{
                 height: '50px',
@@ -103,7 +75,7 @@ export function MangaFilters(): React.JSX.Element {
           </FormControl>
         </Grid>
       </Grid>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mr: 2, mt:2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mr: 2, mt: 2 }}>
         <Button variant="outlined">Reset</Button>
         <Button variant="contained">Tìm kiếm</Button>
       </Box>

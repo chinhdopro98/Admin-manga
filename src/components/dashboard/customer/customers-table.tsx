@@ -49,8 +49,6 @@ export function CustomersTable({
           </TableHead>
           <TableBody>
             {users.map((user) => {
-
-
               return (
                 <TableRow hover key={user.id} >
                   <TableCell>{user.id}</TableCell>

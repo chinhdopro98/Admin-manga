@@ -7,38 +7,42 @@ import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
 import { RootState } from '@/redux/stores';
 import { selectAllCategories } from '@/redux/actions/category';
 import { ICategory } from '@/redux/interfaces/interfaces';
+import { Box, FormControl, InputLabel } from '@mui/material';
 
-interface MangaCategoryCheckBoxesProps {
+interface MangaCategoryProps {
   props?: ICategory[] | null;
+  sx?: React.CSSProperties;
 }
 
-export const MangaCategoryCheckBoxes: React.FC<MangaCategoryCheckBoxesProps> = ({ props }) => {
+export const MangaCategoryForm: React.FC<MangaCategoryProps> = ({ props, sx }) => {
   const categories = useAppSelector((state: RootState) => state.category.categories);
   const dispatch = useAppDispatch();
-
   React.useEffect(() => {
     dispatch(selectAllCategories());
   }, [dispatch]);
   const selectedCategoryIds = props ? new Set(props.map(category => category.id)) : new Set();
-
   const handleCheckboxChange = (categoryId: number) => {
-
   };
 
   return (
-    <FormGroup row>
-      {categories.map((category) => (
-        <FormControlLabel
-          key={category.id}
-          control={
-            <Checkbox
-              checked={selectedCategoryIds.has(category.id)}
-              onChange={() => handleCheckboxChange(category.id)}
+    <Box sx={sx}>
+      <InputLabel sx={{ fontSize: "16px", mb: "5px", color: "#000" }}>Thể loại</InputLabel>
+      <FormControl component="fieldset">
+        <FormGroup row>
+          {categories.map((category) => (
+            <FormControlLabel
+              key={category.id}
+              control={
+                <Checkbox
+                  checked={selectedCategoryIds.has(category.id)}
+                  onChange={() => handleCheckboxChange(category.id)}
+                />
+              }
+              label={category.name}
             />
-          }
-          label={category.name}
-        />
-      ))}
-    </FormGroup>
+          ))}
+        </FormGroup>
+      </FormControl>
+    </Box>
   );
 };

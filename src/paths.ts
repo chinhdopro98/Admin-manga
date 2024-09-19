@@ -15,6 +15,7 @@ export const paths = {
     companions: '/dashboard/companions',
     comments: '/dashboard/comments',
     mangaDetail: (id: string) => `/dashboard/mangas/${id}`,
+    chapterDetail: (mangaId?: string, chapterId?: string) => `/dashboard/mangas/${mangaId}/chapters/${chapterId}`,
   },
   errors: { notFound: '/errors/not-found' },
 } as const;

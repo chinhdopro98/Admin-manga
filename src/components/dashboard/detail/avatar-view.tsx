@@ -2,17 +2,19 @@
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Button, Card, CardContent, Input } from '@mui/material';
+import { Button, Card, CardContent, Input, Typography } from '@mui/material';
 import { IManga } from '@/redux/interfaces/interfaces';
 import { UploadSimple } from '@phosphor-icons/react/dist/ssr';
+
 interface MangaDetailProps {
     manga?: IManga | null;
 }
 
-const OtherInfoDetail: React.FC<MangaDetailProps> = ({ manga }) => {
+const AvatarView: React.FC<MangaDetailProps> = ({ manga }) => {
     return (
         <Card >
             <CardContent>
+                <Typography variant="h5" sx={{ marginBottom: 2 }}>Ảnh bìa</Typography>
                 <Box>
                     <Box sx={{ width: "200px", margin: 'auto', textAlign: "center" }}>
                         <img
@@ -48,4 +50,4 @@ const OtherInfoDetail: React.FC<MangaDetailProps> = ({ manga }) => {
     );
 };
 
-export default OtherInfoDetail;
+export default AvatarView;

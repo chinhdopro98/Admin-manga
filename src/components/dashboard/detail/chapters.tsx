@@ -14,11 +14,13 @@ import { IChapter } from '@/redux/interfaces/interfaces';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import { paths } from '@/paths';
 
 interface ChapterProps {
     chapters?: IChapter[];
+    mangaId?: string
 }
-const Chapters = ({ chapters = [] }: ChapterProps) => {
+const Chapters = ({ chapters = [], mangaId }: ChapterProps) => {
     return (
         <Card sx={{ mt: 5 }}>
             <CardContent>
@@ -26,7 +28,7 @@ const Chapters = ({ chapters = [] }: ChapterProps) => {
                     title="Danh sách chương"
                     action={
                         <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained"
-                            sx={{ p: 0, borderRadius: "5px", minWidth: "100px", height: "40px", mr:1}}>
+                            sx={{ p: 0, borderRadius: "5px", minWidth: "100px", height: "40px", mr: 1 }}>
                             Tạo mới
                         </Button>
                     }
@@ -63,9 +65,11 @@ const Chapters = ({ chapters = [] }: ChapterProps) => {
                                                 <Button variant="outlined" sx={{ minWidth: "40px", p: 0, height: "30px", borderRadius: "5px" }}>
                                                     <Trash size={16} />
                                                 </Button>
-                                                <Button variant="outlined" sx={{ minWidth: "40px", p: 0, height: "30px", borderRadius: "5px" }}>
-                                                    <PencilSimpleLine size={16} />
-                                                </Button>
+                                                <Link href={paths.dashboard.chapterDetail(mangaId, chapter.id)} passHref>
+                                                    <Button variant="outlined" sx={{ minWidth: "40px", p: 0, height: "30px", borderRadius: "5px" }}>
+                                                        <PencilSimpleLine size={16} />
+                                                    </Button>
+                                                </Link>
                                             </Box>
                                         </TableCell>
                                     </TableRow>

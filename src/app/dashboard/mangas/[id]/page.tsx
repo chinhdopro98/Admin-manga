@@ -8,12 +8,13 @@ import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
 import { RootState } from '@/redux/stores';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import InformationDetail from '@/components/dashboard/detail/information';
-import OtherInfoDetail from '@/components/dashboard/detail/other-infor';
 import { getChapters, getMangaSingle } from '@/redux/actions/manga';
 import { useRouter } from 'next/navigation';
 import Chapters from '@/components/dashboard/detail/chapters';
 import { FloppyDiskBack } from '@phosphor-icons/react/dist/ssr';
 import dayjs from 'dayjs';
+import AvatarView from '@/components/dashboard/detail/avatar-view';
+import Contributors from '@/components/dashboard/detail/contributors';
 
 const MangaDetail: React.FC = () => {
   const router = useRouter();
@@ -61,10 +62,11 @@ const MangaDetail: React.FC = () => {
         <Grid container spacing={5}>
           <Grid item lg={8} md={6} xs={12}>
             <InformationDetail manga={manga} />
-            <Chapters chapters={chapters} />
+            <Chapters chapters={chapters} mangaId={manga?.id} />
           </Grid>
           <Grid item lg={4} md={6} xs={12}>
-            <OtherInfoDetail manga={manga} />
+            <AvatarView manga={manga} />
+            <Contributors manga={manga} />
           </Grid>
         </Grid>
       </Stack>
