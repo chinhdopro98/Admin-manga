@@ -7,14 +7,17 @@ import LoadingPopup from '@/components/core/loadding';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
 import { RootState } from '@/redux/stores';
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import InformationDetail from '@/components/dashboard/detail/information';
-import { getChapters, getMangaSingle } from '@/redux/actions/manga';
+import { getChapters, getMangaSingle, updateManga } from '@/redux/actions/manga';
 import { useRouter } from 'next/navigation';
 import Chapters from '@/components/dashboard/detail/chapters';
 import { FloppyDiskBack } from '@phosphor-icons/react/dist/ssr';
 import dayjs from 'dayjs';
 import AvatarView from '@/components/dashboard/detail/avatar-view';
 import Contributors from '@/components/dashboard/detail/contributors';
+import { InformationDetail } from '@/components/dashboard/detail/information';
+import { IManga, IMangaData } from '@/redux/interfaces/interfaces';
+import AlertNotification from '@/components/core/toast';
+import { onCloseToastManga } from '@/redux/reducers/manga';
 
 const MangaDetail: React.FC = () => {
   const router = useRouter();
@@ -24,20 +27,69 @@ const MangaDetail: React.FC = () => {
   const manga = useAppSelector((state: RootState) => state.manga.manga);
   const error = useAppSelector((state: RootState) => state.manga.error);
   const chapters = useAppSelector((state: RootState) => state.manga.chapters);
-  const dispatch = useAppDispatch();
-  React.useEffect(() => {
-    const mangaId = Array.isArray(id) ? id[0] : id;
-    if (mangaId) {
-      dispatch(getMangaSingle({ include, id: mangaId }));
-      dispatch(getChapters({ id: mangaId, per_page: 9999 }))
-    }
-  }, [dispatch]);
+  const showSuccess = useAppSelector((state: RootState) => state.manga.showSuccess);
+  const showError = useAppSelector((state: RootState) => state.manga.showError);
+  const [mangaData, setMangaData] = React.useState<IMangaData>({
+    name: '',
+    name_alt: '',
+    doujinshi_id: '',
+    finishedBy: '',
+    genres: [],
+    pilot: '',
+    group_id: '',
+    is_hot: false,
+    status: 0,
+    user_id: '',
+    artist_id: ''
+  });
 
   React.useEffect(() => {
-    if (error) {
-      router.push('/not-found');
+    if (manga) {
+      setMangaData({
+        name: manga.name || '',
+        name_alt: manga.name_alt || '',
+        doujinshi_id: manga.doujinshi_id || '',
+        finishedBy: manga.finished_by || '',
+        genres: manga.genres || [],
+        pilot: manga.pilot || '',
+        group_id: manga.group_id || '',
+        is_hot: manga.is_hot || false,
+        status: manga.status || 0,
+        user_id: manga.user_id || '',
+        artist_id: manga.artist_id || '',
+      });
     }
-  }, [error, router]);
+  }, [manga]);
+  console.log(mangaData)
+  const handleSubmit = () => {
+    dispatch(updateManga({
+      id,
+      data: mangaData
+    }))
+  };
+  const handleMangaDataChange = React.useCallback((field: string, value: any) => {
+    setMangaData(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  }, []);
+
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    const mangaId = Array.isArray(id) ? id[0] : id;
+
+    if (mangaId && (!manga || manga.id !== mangaId)) {
+      dispatch(getMangaSingle({ include, id: mangaId }));
+      dispatch(getChapters({ id: mangaId, per_page: 9999 }));
+    }
+  }, [dispatch, id, manga]);
+
+  // React.useEffect(() => {
+  //   if (error) {
+  //     router.push('/not-found');
+  //   }
+  // }, [error, router]);
   return (
     <Box>
       <LoadingPopup open={loading} />
@@ -53,6 +105,7 @@ const MangaDetail: React.FC = () => {
               <Button
                 variant="contained"
                 color="primary"
+                onClick={handleSubmit}
               >
                 <FloppyDiskBack size={18} /> Lưu
               </Button>
@@ -61,15 +114,16 @@ const MangaDetail: React.FC = () => {
         </Stack>
         <Grid container spacing={5}>
           <Grid item lg={8} md={6} xs={12}>
-            <InformationDetail manga={manga} />
+            <InformationDetail manga={manga} onChange={handleMangaDataChange} />
             <Chapters chapters={chapters} mangaId={manga?.id} />
           </Grid>
           <Grid item lg={4} md={6} xs={12}>
             <AvatarView manga={manga} />
-            <Contributors manga={manga} />
+            <Contributors manga={manga} onChange={handleMangaDataChange} />
           </Grid>
         </Grid>
       </Stack>
+      <AlertNotification showError={showError} showSuccess={showSuccess} onClose={onCloseToastManga} />
     </Box>
   );
 };

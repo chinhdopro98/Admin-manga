@@ -1,51 +1,53 @@
 import * as React from 'react';
 import { Autocomplete, Box, CircularProgress, FormControl, InputLabel, TextField } from '@mui/material';
+import { IType } from '@/redux/interfaces/interfaces';
 import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
 import { RootState } from '@/redux/stores';
-import { IType } from '@/redux/interfaces/interfaces';
 import useDebounce from '@/hooks/use-hook-debound';
 import { resetTypes } from '@/redux/reducers/type';
 import { searchTypes } from '@/redux/actions/type';
 
 interface MangaTypeProps {
-    type?: IType | null;
+    type: IType | null;
     sx?: React.CSSProperties;
     placeholder?: string;
-    isRenderDetail?: boolean
+    onChange: (value: IType | null) => void;
+    isSearchMode?: boolean;
+    onInputChange: () => void;
 }
 
-export const MangaTypeForm: React.FC<MangaTypeProps> = ({ type, sx, placeholder, isRenderDetail }) => {
-    const [value, setValue] = React.useState<IType | null>(type || null);
+export const MangaTypeForm: React.FC<MangaTypeProps> = ({ type, sx, placeholder, onChange, isSearchMode, onInputChange }) => {
     const [inputValue, setInputValue] = React.useState<string>('');
-    const dispatch = useAppDispatch();
     const types = useAppSelector((state: RootState) => state.type.types);
     const loading = useAppSelector((state: RootState) => state.type.loading);
+    const dispatch = useAppDispatch();
     const debouncedQuery = useDebounce(inputValue);
-    React.useEffect(() => {
-        setValue(type || null);
-        if (type) {
-            isRenderDetail = false;
-        }
-    }, [type]);
+    const skipOnInputChange = React.useRef(true);
+
     React.useEffect(() => {
         if (debouncedQuery.trim() === '') {
             dispatch(resetTypes());
-            setValue(type || null);
-        } else if (!isRenderDetail) {
+        } else if (!isSearchMode) {
             dispatch(searchTypes(debouncedQuery));
         }
-    }, [debouncedQuery, dispatch]);
+    }, [debouncedQuery, dispatch, isSearchMode]);
 
     return (
         <Box sx={sx}>
-            <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Kiểu truyện</InputLabel>
+            <InputLabel sx={{ fontSize: "15px", mb: "3px", color: "#000" }}>Kiểu truyện</InputLabel>
             <FormControl fullWidth>
                 <Autocomplete
-                    value={value}
-                    onChange={(event: React.ChangeEvent<{}>, newValue: IType | null) => {
-                        setValue(newValue);
+                    value={type}
+                    onChange={(event: any, newValue: IType | null) => {
+                        onChange(newValue);
                     }}
-                    onInputChange={(event: React.ChangeEvent<{}>, newInputValue: string) => {
+                    inputValue={inputValue}
+                    onInputChange={(event, newInputValue) => {
+                        if (skipOnInputChange.current) {
+                            skipOnInputChange.current = false;
+                        } else {
+                            onInputChange();
+                        }
                         setInputValue(newInputValue);
                     }}
                     options={types}
@@ -59,14 +61,15 @@ export const MangaTypeForm: React.FC<MangaTypeProps> = ({ type, sx, placeholder,
                             sx={{
                                 maxWidth: "100%",
                                 '& .MuiInputBase-root': {
-                                    height: '50px',
+                                    height: '45px',
+                                    fontSize: "14px"
                                 },
                             }}
                             InputProps={{
                                 ...params.InputProps,
                                 endAdornment: (
                                     <>
-                                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {loading ? <CircularProgress color="inherit" size={15} /> : null}
                                         {params.InputProps.endAdornment}
                                     </>
                                 ),

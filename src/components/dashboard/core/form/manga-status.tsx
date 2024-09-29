@@ -1,6 +1,5 @@
 import * as React from 'react';
-import FormControl from '@mui/material/FormControl';
-import { Box, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Box, SelectChangeEvent } from '@mui/material';
 
 const states = [
     {
@@ -16,34 +15,32 @@ const states = [
 interface MangaStatusProps {
     status?: number | null;
     sx?: React.CSSProperties;
+    onChange: (value: number | null) => void;
 }
 
-export const MangaStatusForm: React.FC<MangaStatusProps> = ({ status, sx }) => {
-    const [value, setValue] = React.useState<number | null>(status || null);
-
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setValue(event.target.value as number);
+export const MangaStatusForm: React.FC<MangaStatusProps> = ({ status, sx, onChange }) => {
+    const handleChange = (event: SelectChangeEvent<number>) => {
+        onChange(Number(event.target.value)); 
     };
-    React.useEffect(() => {
-        setValue(status || null);
-    }, [status]);
+
     return (
         <Box sx={sx}>
-            <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Trạng thái</InputLabel>
+            <InputLabel sx={{ fontSize: "15px", mb: "3px", color: "#000" }}>Trạng thái</InputLabel>
             <FormControl fullWidth variant="outlined">
                 <Select
                     labelId="state-label"
-                    value={value ?? ''}
+                    value={status !== null && status !== undefined ? status : ""} 
                     label="State"
                     name="state"
-                    onChange={handleChange}
+                    onChange={handleChange}  
                     fullWidth
                     sx={{
-                        height: '50px',
+                        height: '45px',
                         '& .MuiInputBase-root': {
-                            height: '50px',
+                            height: '45px',
                             display: 'flex',
                             alignItems: 'center',
+                            fontSize: "14px"
                         },
                     }}
                 >
@@ -51,7 +48,7 @@ export const MangaStatusForm: React.FC<MangaStatusProps> = ({ status, sx }) => {
                         <MenuItem
                             key={option.value}
                             value={option.value}
-                            sx={{ height: '50px', display: 'flex', alignItems: 'center' }}
+                            sx={{ height: '45px', display: 'flex', alignItems: 'center', fontSize: "14px" }}
                         >
                             {option.label}
                         </MenuItem>
@@ -60,4 +57,4 @@ export const MangaStatusForm: React.FC<MangaStatusProps> = ({ status, sx }) => {
             </FormControl>
         </Box>
     );
-}
+};

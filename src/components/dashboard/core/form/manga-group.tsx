@@ -13,40 +13,40 @@ interface MangaGroupProps {
     group?: IGroup | null;
     sx?: React.CSSProperties;
     placeholder?: string;
-    isRenderDetail?: boolean
+    onChange: (value: IGroup | null) => void;
+    isSearchMode?: boolean;
+    onInputChange: () => void;
 }
 
-export const MangaGroupForm: React.FC<MangaGroupProps> = ({ group, sx, placeholder, isRenderDetail }) => {
-    const [value, setValue] = React.useState<IGroup | null>(group || null);
+export const MangaGroupForm: React.FC<MangaGroupProps> = ({ group, sx, placeholder, onChange, isSearchMode, onInputChange }) => {
     const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = React.useState<string>('');
     const groups = useAppSelector((state: RootState) => state.group.groups);
     const loading = useAppSelector((state: RootState) => state.group.loading);
     const debouncedQuery = useDebounce(inputValue);
-    React.useEffect(() => {
-        setValue(group || null);
-        if (group) {
-            isRenderDetail = false;
-        }
-    }, [group]);
-
+    const skipOnInputChange = React.useRef(true);
     React.useEffect(() => {
         if (debouncedQuery.trim() === '') {
             dispatch(resetGroups());
-        } else if (!isRenderDetail) {
+        } else if (!isSearchMode) {
             dispatch(searchGroups(debouncedQuery));
         }
-    }, [debouncedQuery, dispatch]);
+    }, [debouncedQuery, dispatch, isSearchMode]);
     return (
         <Box sx={sx}>
-            <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Nhóm dịch</InputLabel>
+            <InputLabel sx={{ fontSize: "15px", mb: "3px", color: "#000" }}>Nhóm dịch</InputLabel>
             <FormControl fullWidth>
                 <Autocomplete
-                    value={value}
+                    value={group}
                     onChange={(event: React.ChangeEvent<{}>, newValue: IGroup | null) => {
-                        setValue(newValue);
+                        onChange(newValue);
                     }}
                     onInputChange={(event: React.ChangeEvent<{}>, newInputValue: string) => {
+                        if (skipOnInputChange.current) {
+                            skipOnInputChange.current = false;
+                        } else {
+                            onInputChange();
+                        }
                         setInputValue(newInputValue);
                     }}
                     options={groups}
@@ -57,7 +57,8 @@ export const MangaGroupForm: React.FC<MangaGroupProps> = ({ group, sx, placehold
                             sx={{
                                 maxWidth: "100%",
                                 '& .MuiInputBase-root': {
-                                    height: '50px',
+                                    height: '45px',
+                                    fontSize: "14px"
                                 },
                             }}
                             {...params}
@@ -67,7 +68,7 @@ export const MangaGroupForm: React.FC<MangaGroupProps> = ({ group, sx, placehold
                                 ...params.InputProps,
                                 endAdornment: (
                                     <>
-                                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {loading ? <CircularProgress color="inherit" size={14} /> : null}
                                         {params.InputProps.endAdornment}
                                     </>
                                 ),

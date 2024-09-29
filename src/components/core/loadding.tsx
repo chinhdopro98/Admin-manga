@@ -15,7 +15,7 @@ const LoadingPopup = ({ open }: loading) => {
         position: 'fixed',
         top: "65px",
         bottom: 0,
-        left: "280px",
+        left: "250px",
         right: 0
       }}
     >

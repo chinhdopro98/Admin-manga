@@ -7,22 +7,20 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 interface MangaPilotProps {
     text?: string;
     sx?: React.CSSProperties;
+    onChange: (value: string) => void;
 }
 
-export const MangaPilotForm: React.FC<MangaPilotProps> = ({ text, sx }) => {
-    const [value, setValue] = React.useState(text);
-    React.useEffect(() => {
-        setValue(text);
-    }, [text]);
+export const MangaPilotForm: React.FC<MangaPilotProps> = ({ text, sx, onChange }) => {
+    ;
     return (
         <Box sx={sx}>
-            <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Nội dung </InputLabel>
+            <InputLabel sx={{ fontSize: "15px", mb: "5px", color: "#000" }}>Nội dung </InputLabel>
             <FormControl fullWidth variant="outlined">
                 <ReactQuill
                     theme="snow"
-                    style={{ height: '20vh', maxHeight: '20vh' }}
-                    value={value}
-                    onChange={setValue}
+                    style={{ height: '20vh', maxHeight: '20vh', fontSize: "14px", }}
+                    value={text}
+                    onChange={onChange}
                 />
             </FormControl>
         </Box>

@@ -11,38 +11,39 @@ interface MangaAuthorProps {
     user?: IAuthor | null;
     sx?: React.CSSProperties;
     placeholder?: string;
-    isRenderDetail?: boolean
+    onChange: (value: IAuthor | null) => void;
+    isSearchMode?: boolean;
+    onInputChange: () => void;
 }
-export const MangaAuthorForm: React.FC<MangaAuthorProps> = ({ user, sx, placeholder, isRenderDetail }) => {
-    const [value, setValue] = React.useState<IAuthor | null>(user || null);
+export const MangaAuthorForm: React.FC<MangaAuthorProps> = React.memo(({ user, sx, placeholder, isSearchMode, onChange, onInputChange }) => {
     const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = React.useState<string>('');
     const authors = useAppSelector((state: RootState) => state.author.authors);
     const loading = useAppSelector((state: RootState) => state.author.loading);
     const debouncedQuery = useDebounce(inputValue);
-    React.useEffect(() => {
-        setValue(user || null);
-        if (user) {
-            isRenderDetail = false
-        }
-    }, [user]);
+    const skipOnInputChange = React.useRef(true);
     React.useEffect(() => {
         if (debouncedQuery.trim() === '') {
             dispatch(resetAuthors());
-        } else if (!isRenderDetail) {
+        } else if (!isSearchMode) {
             dispatch(searchAuthors(debouncedQuery));
         }
-    }, [debouncedQuery, dispatch]);
+    }, [debouncedQuery, dispatch, isSearchMode]);
     return (
         <Box sx={sx}>
-            <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Tác giả</InputLabel>
+            <InputLabel sx={{ fontSize: "15px", mb: "3px", color: "#000" }}>Tác giả</InputLabel>
             <FormControl fullWidth variant="outlined">
                 <Autocomplete sx={{ maxWidth: "100%" }}
-                    value={value}
+                    value={user}
                     onChange={(event: React.ChangeEvent<{}>, newValue: IAuthor | null) => {
-                        setValue(newValue);
+                        onChange(newValue);
                     }}
                     onInputChange={(event: React.ChangeEvent<{}>, newInputValue: string) => {
+                        if (skipOnInputChange.current) {
+                            skipOnInputChange.current = false;
+                        } else {
+                            onInputChange();
+                        }
                         setInputValue(newInputValue);
                     }}
                     options={authors}
@@ -53,7 +54,8 @@ export const MangaAuthorForm: React.FC<MangaAuthorProps> = ({ user, sx, placehol
                             sx={{
                                 maxWidth: "100%",
                                 '& .MuiInputBase-root': {
-                                    height: '50px',
+                                    height: '45px',
+                                    fontSize: "14px",
                                 },
                             }}
                             {...params}
@@ -63,7 +65,7 @@ export const MangaAuthorForm: React.FC<MangaAuthorProps> = ({ user, sx, placehol
                                 ...params.InputProps,
                                 endAdornment: (
                                     <>
-                                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {loading ? <CircularProgress color="inherit" size={14} /> : null}
                                         {params.InputProps.endAdornment}
                                     </>
                                 ),
@@ -74,4 +76,4 @@ export const MangaAuthorForm: React.FC<MangaAuthorProps> = ({ user, sx, placehol
             </FormControl>
         </Box>
     );
-}
+});

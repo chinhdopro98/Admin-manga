@@ -74,7 +74,7 @@ export interface GetAllChapterParams {
 
 export interface GetMangaSingle {
   include?: string;
-  id?: string
+  id?: string;
 }
 export interface MangaState {
   loading: boolean;
@@ -83,7 +83,15 @@ export interface MangaState {
   error?: string | null;
   manga?: IManga | null;
   chapters: IChapter[];
-  chapter?: IChapter | null;
+  chapter?: IChap | null;
+  showSuccess: boolean;
+  showError: boolean;
+}
+
+export interface ChapterUpdatePayload {
+  id: string;
+  name: string;
+  contents: ContentChap[];
 }
 
 export interface IManga {
@@ -99,7 +107,7 @@ export interface IManga {
   status: number;
   views: number;
   views_day: number;
-  is_hot: number;
+  is_hot: boolean;
   hot_at: string | null;
   is_reviewed: number;
   slug: string;
@@ -110,11 +118,11 @@ export interface IManga {
   cover_full_url: string;
   group?: IGroup;
   user: IUser;
-  genres?: ICategory[];
+  genres?: ICategory[] | null;
   artist?: IAuthor;
   doujinshi: IType;
+  finishedBy?: string
 }
-
 
 export interface IChapter {
   id: string;
@@ -122,11 +130,28 @@ export interface IChapter {
   user_id: string;
   manga_id: string;
   name: string;
-  content: string[]; 
+  content: string[];
   views: number;
   order: number;
-  created_at: string; 
-  updated_at: string; 
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IChap {
+  id: string;
+  slug: string;
+  user_id: string;
+  manga_id: string;
+  name: string;
+  content: ContentChap[];
+  views: number;
+  order: number;
+  created_at: string;
+  updated_at: string;
+}
+export interface ContentChap {
+  name: string;
+  url: string;
 }
 // Category
 export interface GetAllCategoryParams {
@@ -167,7 +192,7 @@ export interface AuthorState {
   error?: string | null;
 }
 
-export interface IAuthor{
+export interface IAuthor {
   id: string;
   slug: string;
   name: string;
@@ -176,7 +201,6 @@ export interface IAuthor{
   updated_at: string;
   user: IUser;
 }
-
 
 //type
 export interface GetAllTypeParams {
@@ -193,7 +217,7 @@ export interface TypeState {
   error?: string | null;
 }
 
-export interface IType{
+export interface IType {
   id: string;
   slug: string;
   name: string;
@@ -218,7 +242,7 @@ export interface GroupState {
   error?: string | null;
 }
 
-export interface IGroup{
+export interface IGroup {
   id: string;
   slug: string;
   name: string;
@@ -227,7 +251,6 @@ export interface IGroup{
   updated_at: string;
   user: IUser;
 }
-
 
 //achievements
 export interface GetAllAchievementParams {
@@ -286,7 +309,6 @@ export interface ICompanion {
   user: IUser;
 }
 
-
 //comment
 export interface GetAllCommentParams {
   page: number;
@@ -311,5 +333,24 @@ export interface IComment {
   updated_at: string;
   parent_id: string;
   user: IUser;
-  user_id: string
+  user_id: string;
+}
+
+export interface IMangaPayloadUpdate {
+  data: IManga;
+  id: string;
+}
+
+export interface IMangaData {
+  name: string;
+  name_alt: string;
+  doujinshi_id: string;
+  finishedBy: string;
+  genres: ICategory[];  // Kiểu của genres là mảng ICategory
+  pilot: string;
+  group_id: string;
+  is_hot: boolean;
+  status: number;
+  user_id: string;
+  artist_id: string;
 }

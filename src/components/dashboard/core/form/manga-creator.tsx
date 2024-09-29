@@ -11,39 +11,41 @@ interface MangaCreatorProps {
     user?: IUser | null;
     sx?: React.CSSProperties;
     placeholder?: string
-    isRenderDetail?: boolean
+    onChange: (value: IUser | null) => void;
+    isSearchMode?: boolean;
+    onInputChange: () => void;
 }
 
-export const MangaCreatorForm: React.FC<MangaCreatorProps> = ({ user, sx, placeholder, isRenderDetail }) => {
-    const [value, setValue] = React.useState<IUser | null>(null);
+export const MangaCreatorForm: React.FC<MangaCreatorProps> = ({ user, sx, placeholder, isSearchMode, onChange, onInputChange }) => {
     const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = React.useState<string>('');
     const users = useAppSelector((state: RootState) => state.user.users);
     const loading = useAppSelector((state: RootState) => state.user.loading);
     const debouncedQuery = useDebounce(inputValue);
-    React.useEffect(() => {
-        setValue(user || null);
-        if (user) {
-            isRenderDetail = false;
-        }
-    }, [user]);
+    const skipOnInputChange = React.useRef(true);
+
     React.useEffect(() => {
         if (debouncedQuery.trim() === '') {
             dispatch(resetUsers());
-        } else if (!isRenderDetail) {
+        } else if (!isSearchMode) {
             dispatch(searchUsers(debouncedQuery));
         }
-    }, [debouncedQuery, dispatch]);
+    }, [debouncedQuery, dispatch, isSearchMode]);
     return (
         <Box sx={sx}>
-            <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Người đăng</InputLabel>
+            <InputLabel sx={{ fontSize: "15px", mb: "3px", color: "#000" }}>Người đăng</InputLabel>
             <FormControl fullWidth variant="outlined">
                 <Autocomplete
-                    value={value}
+                    value={user}
                     onChange={(event: React.ChangeEvent<{}>, newValue: IUser | null) => {
-                        setValue(newValue);
+                        onChange(newValue);
                     }}
                     onInputChange={(event: React.ChangeEvent<{}>, newInputValue: string) => {
+                        if (skipOnInputChange.current) {
+                            skipOnInputChange.current = false;
+                        } else {
+                            onInputChange();
+                        }
                         setInputValue(newInputValue);
                     }}
                     options={users}
@@ -54,7 +56,8 @@ export const MangaCreatorForm: React.FC<MangaCreatorProps> = ({ user, sx, placeh
                             sx={{
                                 maxWidth: "100%",
                                 '& .MuiInputBase-root': {
-                                    height: '50px',
+                                    height: '45px',
+                                    fontSize: "14px"
                                 },
                             }}
                             {...params}
@@ -64,7 +67,7 @@ export const MangaCreatorForm: React.FC<MangaCreatorProps> = ({ user, sx, placeh
                                 ...params.InputProps,
                                 endAdornment: (
                                     <>
-                                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                        {loading ? <CircularProgress color="inherit" size={14} /> : null}
                                         {params.InputProps.endAdornment}
                                     </>
                                 ),

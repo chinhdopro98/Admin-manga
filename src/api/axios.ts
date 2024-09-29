@@ -73,4 +73,20 @@ export const deleteApi = async (url: string, config?: AxiosRequestConfig) => {
   }
 };
 
+export const postApiFormData = async (url: string, data: any, config?: AxiosRequestConfig) => {
+  try {
+    config = {
+      ...config,
+      headers: {
+        ...config?.headers,
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+    const response = await apiClient.post(url, data, config);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default apiClient;
