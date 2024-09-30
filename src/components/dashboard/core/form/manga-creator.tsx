@@ -11,12 +11,19 @@ interface MangaCreatorProps {
     user?: IUser | null;
     sx?: React.CSSProperties;
     placeholder?: string
-    onChange: (value: IUser | null) => void;
+    onChange?: (value: IUser | null) => void;
     isSearchMode?: boolean;
-    onInputChange: () => void;
+    onInputChange?: () => void;
 }
 
-export const MangaCreatorForm: React.FC<MangaCreatorProps> = ({ user, sx, placeholder, isSearchMode, onChange, onInputChange }) => {
+export const MangaCreatorForm: React.FC<MangaCreatorProps> = ({
+    user,
+    sx,
+    placeholder,
+    onChange = () => { },
+    isSearchMode,
+    onInputChange = () => { }
+}) => {
     const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = React.useState<string>('');
     const users = useAppSelector((state: RootState) => state.user.users);

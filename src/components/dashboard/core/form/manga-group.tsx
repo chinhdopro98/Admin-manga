@@ -13,12 +13,19 @@ interface MangaGroupProps {
     group?: IGroup | null;
     sx?: React.CSSProperties;
     placeholder?: string;
-    onChange: (value: IGroup | null) => void;
+    onChange?: (value: IGroup | null) => void;
     isSearchMode?: boolean;
-    onInputChange: () => void;
+    onInputChange?: () => void;
 }
 
-export const MangaGroupForm: React.FC<MangaGroupProps> = ({ group, sx, placeholder, onChange, isSearchMode, onInputChange }) => {
+export const MangaGroupForm: React.FC<MangaGroupProps> = ({
+    group,
+    sx,
+    placeholder,
+    onChange = () => { },
+    isSearchMode,
+    onInputChange = () => { }
+}) => {
     const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = React.useState<string>('');
     const groups = useAppSelector((state: RootState) => state.group.groups);

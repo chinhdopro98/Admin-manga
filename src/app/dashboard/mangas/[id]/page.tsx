@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import AvatarView from '@/components/dashboard/detail/avatar-view';
 import Contributors from '@/components/dashboard/detail/contributors';
 import { InformationDetail } from '@/components/dashboard/detail/information';
-import { IManga, IMangaData } from '@/redux/interfaces/interfaces';
+import { IMangaData } from '@/redux/interfaces/interfaces';
 import AlertNotification from '@/components/core/toast';
 import { onCloseToastManga } from '@/redux/reducers/manga';
 
@@ -29,6 +29,7 @@ const MangaDetail: React.FC = () => {
   const chapters = useAppSelector((state: RootState) => state.manga.chapters);
   const showSuccess = useAppSelector((state: RootState) => state.manga.showSuccess);
   const showError = useAppSelector((state: RootState) => state.manga.showError);
+  const [bgDark, setBgDark] = React.useState(false);
   const [mangaData, setMangaData] = React.useState<IMangaData>({
     name: '',
     name_alt: '',
@@ -60,12 +61,15 @@ const MangaDetail: React.FC = () => {
       });
     }
   }, [manga]);
-  console.log(mangaData)
   const handleSubmit = () => {
+    setBgDark(true);
+    const filteredMangaData = Object.fromEntries(
+      Object.entries(mangaData).filter(([_, value]) => value !== null && value !== '')
+    );
     dispatch(updateManga({
       id,
-      data: mangaData
-    }))
+      data: filteredMangaData
+    })).finally(() => setBgDark(false));
   };
   const handleMangaDataChange = React.useCallback((field: string, value: any) => {
     setMangaData(prevState => ({
@@ -78,21 +82,20 @@ const MangaDetail: React.FC = () => {
 
   React.useEffect(() => {
     const mangaId = Array.isArray(id) ? id[0] : id;
-
     if (mangaId && (!manga || manga.id !== mangaId)) {
       dispatch(getMangaSingle({ include, id: mangaId }));
       dispatch(getChapters({ id: mangaId, per_page: 9999 }));
     }
   }, [dispatch, id, manga]);
 
-  // React.useEffect(() => {
-  //   if (error) {
-  //     router.push('/not-found');
-  //   }
-  // }, [error, router]);
+  React.useEffect(() => {
+    if (error) {
+      router.push('/not-found');
+    }
+  }, [error, router]);
   return (
     <Box>
-      <LoadingPopup open={loading} />
+      <LoadingPopup open={loading} bgDark={bgDark} />
       <Stack spacing={3}>
         <Stack sx={{ flex: '1 1 auto', borderBottom: "1px solid #484848", pb: 1 }}>
           <Grid container alignItems="center">

@@ -33,12 +33,21 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open,
                     )}
                 </DialogContentText>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary">
-                    Hủy
-                </Button>
-                <Button onClick={onConfirm} color="error" autoFocus>
+            <DialogActions sx={{ mt: 2, mr: 2 }}>
+                <Button
+                    onClick={onConfirm}
+                    color="error"
+                    autoFocus
+                    sx={{ minWidth: "50px", borderRadius: "5px", backgroundColor: 'rgba(255, 0, 0, 0.2)', '&:hover': { backgroundColor: 'rgba(255, 0, 0, 0.5)' } }}
+                >
                     Xóa
+                </Button>
+                <Button
+                    onClick={onClose}
+                    color="primary"
+                    sx={{ minWidth: "50px", borderRadius: "5px", backgroundColor: 'rgba(0, 0, 255, 0.2)', '&:hover': { backgroundColor: 'rgba(0, 0, 255, 0.5)' } }}
+                >
+                    Hủy
                 </Button>
             </DialogActions>
         </Dialog>

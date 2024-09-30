@@ -3,13 +3,14 @@ import { Backdrop, CircularProgress } from '@mui/material';
 
 interface loading {
   open: boolean;
+  bgDark?: boolean;
 }
-const LoadingPopup = ({ open }: loading) => {
+const LoadingPopup = ({ open, bgDark = false }: loading) => {
   return (
     <Backdrop
       open={open}
       sx={{
-        backgroundColor: 'rgba(255, 255, 255, 1)',
+        backgroundColor: bgDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 1)',
         color: '#000',
         zIndex: (theme) => theme.zIndex.drawer + 10,
         position: 'fixed',

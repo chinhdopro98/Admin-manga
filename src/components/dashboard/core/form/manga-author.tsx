@@ -11,11 +11,18 @@ interface MangaAuthorProps {
     user?: IAuthor | null;
     sx?: React.CSSProperties;
     placeholder?: string;
-    onChange: (value: IAuthor | null) => void;
+    onChange?: (value: IAuthor | null) => void;
     isSearchMode?: boolean;
-    onInputChange: () => void;
+    onInputChange?: () => void;
 }
-export const MangaAuthorForm: React.FC<MangaAuthorProps> = React.memo(({ user, sx, placeholder, isSearchMode, onChange, onInputChange }) => {
+export const MangaAuthorForm: React.FC<MangaAuthorProps> = React.memo(({
+    user,
+    sx,
+    placeholder,
+    onChange = () => { },
+    isSearchMode,
+    onInputChange = () => { }
+}) => {
     const dispatch = useAppDispatch();
     const [inputValue, setInputValue] = React.useState<string>('');
     const authors = useAppSelector((state: RootState) => state.author.authors);

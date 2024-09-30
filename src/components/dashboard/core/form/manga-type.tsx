@@ -8,15 +8,22 @@ import { resetTypes } from '@/redux/reducers/type';
 import { searchTypes } from '@/redux/actions/type';
 
 interface MangaTypeProps {
-    type: IType | null;
+    type?: IType | null;
     sx?: React.CSSProperties;
     placeholder?: string;
-    onChange: (value: IType | null) => void;
+    onChange?: (value: IType | null) => void;
     isSearchMode?: boolean;
-    onInputChange: () => void;
+    onInputChange?: () => void;
 }
 
-export const MangaTypeForm: React.FC<MangaTypeProps> = ({ type, sx, placeholder, onChange, isSearchMode, onInputChange }) => {
+export const MangaTypeForm: React.FC<MangaTypeProps> = ({
+    type,
+    sx,
+    placeholder,
+    onChange = () => { },
+    isSearchMode,
+    onInputChange = () => { }
+}) => {
     const [inputValue, setInputValue] = React.useState<string>('');
     const types = useAppSelector((state: RootState) => state.type.types);
     const loading = useAppSelector((state: RootState) => state.type.loading);

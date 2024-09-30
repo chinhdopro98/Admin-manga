@@ -9,6 +9,9 @@ import dayjs from 'dayjs';
 import Link from 'next/link';
 import { paths } from '@/paths';
 import DeleteConfirmationModal from '../core/model/delete-model';
+import { useAppDispatch } from '@/hooks/use-hook-redux';
+import { deleteChapters } from '@/redux/reducers/manga';
+import { deleteManyChapter, deleteSingleChapter } from '@/redux/actions/manga';
 
 interface ChapterProps {
     chapters?: IChapter[];
@@ -20,7 +23,7 @@ const Chapters: React.FC<ChapterProps> = ({ chapters = [], mangaId }) => {
     const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
     const [selectAll, setSelectAll] = useState<boolean>(false);
     const [selectedChapter, setSelectedChapter] = useState<IChapter | null>(null);
-
+    const dispatch = useAppDispatch();
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             const allChapterIds = chapters.map((chapter) => chapter.id);
@@ -57,8 +60,20 @@ const Chapters: React.FC<ChapterProps> = ({ chapters = [], mangaId }) => {
     };
 
     const handleConfirmDelete = () => {
+        const ids = selectedChapter ? [selectedChapter.id] : selectedChapters;
         setOpenModal(false);
         setSelectedChapter(null);
+        dispatch(deleteChapters(ids));
+        if (selectedChapter) {
+            setSelectedChapter(null);
+            dispatch(deleteSingleChapter(selectedChapter.id));
+            setSelectedChapters(prevSelected =>
+                prevSelected.filter(id => id !== selectedChapter.id)
+            );
+        } else {
+            dispatch(deleteManyChapter(ids));
+            setSelectedChapters([]);
+        }
     };
 
     const handleCloseModal = () => {

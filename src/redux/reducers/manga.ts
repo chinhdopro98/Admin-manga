@@ -1,6 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getChapterdetail, getChapters, getMangas, getMangaSingle, updateChapter, updateManga } from '../actions/manga';
+import {
+  deleteManyChapter,
+  deleteSingleChapter,
+  getChapterdetail,
+  getChapters,
+  getMangas,
+  getMangaSingle,
+  updateChapter,
+  updateManga,
+} from '../actions/manga';
 import { MangaState } from '../interfaces/interfaces';
 
 const initialState: MangaState = {
@@ -42,6 +51,9 @@ const MangaSlice = createSlice({
     onCloseToastManga(state) {
       state.showError = false;
       state.showSuccess = false;
+    },
+    deleteChapters(state, action) {
+      state.chapters = state.chapters.filter((chapter) => !action.payload.includes(chapter.id));
     },
   },
   extraReducers: (builder) => {
@@ -119,17 +131,39 @@ const MangaSlice = createSlice({
         state.showError = true;
       })
 
-      .addCase(updateManga.pending, (state) => {})
+      .addCase(updateManga.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(updateManga.fulfilled, (state, action) => {
         state.showSuccess = true;
+        state.loading = false;
       })
       .addCase(updateManga.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.showError = true;
+        state.loading = false;
+      })
+
+      .addCase(deleteSingleChapter.pending, (state) => {})
+      .addCase(deleteSingleChapter.fulfilled, (state, action) => {
+        state.showSuccess = true;
+      })
+      .addCase(deleteSingleChapter.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.showError = true;
+      })
+
+      .addCase(deleteManyChapter.pending, (state) => {})
+      .addCase(deleteManyChapter.fulfilled, (state, action) => {
+        state.showSuccess = true;
+      })
+      .addCase(deleteManyChapter.rejected, (state, action) => {
         state.error = action.error.message;
         state.showError = true;
       });
   },
 });
 
-export const { changePanelPosition, deletePannel, onCloseToastManga } = MangaSlice.actions;
+export const { changePanelPosition, deletePannel, onCloseToastManga, deleteChapters } = MangaSlice.actions;
 export const { reducer: mangaReducer } = MangaSlice;
 export default MangaSlice.reducer;

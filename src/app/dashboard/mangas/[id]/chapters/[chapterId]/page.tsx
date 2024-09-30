@@ -13,6 +13,7 @@ import { ChapName } from "@/components/dashboard/chapter/name-chap";
 import PanelList from "@/components/dashboard/chapter/panel-list";
 import AlertNotification from "@/components/core/toast";
 import { onCloseToastManga } from "@/redux/reducers/manga";
+import LoadingPopup from "@/components/core/loadding";
 
 const ChapterDetail: React.FC = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const ChapterDetail: React.FC = () => {
   const [name, setName] = useState('');
   const chapter = useAppSelector((state: RootState) => state.manga.chapter);
   const error = useAppSelector((state: RootState) => state.manga.error);
+  const loading = useAppSelector((state: RootState) => state.manga.loading);
   const showSuccess = useAppSelector((state: RootState) => state.manga.showSuccess);
   const showError = useAppSelector((state: RootState) => state.manga.showError);
   const dispatch = useAppDispatch();
@@ -60,6 +62,7 @@ const ChapterDetail: React.FC = () => {
   };
   return (
     <Box>
+      <LoadingPopup open={loading}/>
       <Grid container alignItems="center" sx={{ mb: 3, pb: 1, borderBottom: "1px solid #484848" }}>
         <Grid item xs>
           <Typography variant="body2" sx={{ fontSize: "16px", fontStyle: "oblique" }}>

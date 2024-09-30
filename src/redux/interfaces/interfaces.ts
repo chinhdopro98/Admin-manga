@@ -121,7 +121,7 @@ export interface IManga {
   genres?: ICategory[] | null;
   artist?: IAuthor;
   doujinshi: IType;
-  finishedBy?: string
+  finishedBy?: string;
 }
 
 export interface IChapter {
@@ -346,7 +346,7 @@ export interface IMangaData {
   name_alt: string;
   doujinshi_id: string;
   finishedBy: string;
-  genres: ICategory[];  // Kiểu của genres là mảng ICategory
+  genres: ICategory[];
   pilot: string;
   group_id: string;
   is_hot: boolean;

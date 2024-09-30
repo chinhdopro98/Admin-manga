@@ -1,5 +1,5 @@
 import React, { useCallback, memo, useEffect, useState } from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import { ICategory, IManga, IType } from '@/redux/interfaces/interfaces';
 import { MangaPilotForm } from '../core/form/manga-pilot';
 import { MangaNameForm } from '../core/form/manga-name';
@@ -8,6 +8,7 @@ import { MangaTypeForm } from '../core/form/manga-type';
 import { MangaCategoryForm } from '../core/form/manga-category';
 import { MangaActionForm } from '../core/form/manga-action';
 import useDebounce from '@/hooks/use-hook-debound';
+import { MangaHotForm } from '../core/form/manga-hot';
 
 interface MangaDetailProps {
     manga?: IManga | null;
@@ -15,12 +16,13 @@ interface MangaDetailProps {
 }
 
 export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onChange }) => {
-    const [name, setName] = React.useState<string>(manga?.name || '');
-    const [nameAlt, setNameAlt] = React.useState<string>(manga?.name_alt || '');
-    const [type, setType] = React.useState<IType | null>(null);
-    const [finishedBy, setFinishedBy] = React.useState<string>(manga?.finished_by || '');
-    const [genres, setGenres] = React.useState<ICategory[] | null>(manga?.genres || []);
-    const [pilot, setPilot] = React.useState<string>(manga?.pilot || '');
+    const [name, setName] = useState<string>(manga?.name || '');
+    const [nameAlt, setNameAlt] = useState<string>(manga?.name_alt || '');
+    const [type, setType] = useState<IType | null>(null);
+    const [finishedBy, setFinishedBy] = useState<string>(manga?.finished_by || '');
+    const [genres, setGenres] = useState<ICategory[] | null>(manga?.genres || []);
+    const [pilot, setPilot] = useState<string>(manga?.pilot || '');
+    const [is_hot, setIsHot] = useState<boolean>(manga?.is_hot || false);
     const [isSearchMode, setIsSearchMode] = useState<boolean>(true);
     const handleInputChange = () => {
         setIsSearchMode(false);
@@ -33,6 +35,16 @@ export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onCh
         setGenres(updatedGenres);
         onChange('genres', updatedGenres)
     }, []);
+
+    const handleTypeChange = (newType: IType | null) => {
+        setType(newType);
+        onChange('doujinshi_id', newType?.id)
+    };
+
+    const handleHotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsHot(event.target.checked);
+        onChange('is_hot', event.target.checked)
+    };
 
     const debouncedName = useDebounce(name);
     const debouncedNameAlt = useDebounce(nameAlt);
@@ -62,20 +74,27 @@ export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onCh
         setFinishedBy(manga?.finished_by || '');
         setGenres(manga?.genres || []);
         setPilot(manga?.pilot || '');
+        setIsHot(manga?.is_hot || false);
     }, [manga]);
 
     return (
         <Card>
             <CardContent>
-                <Typography variant="h6" sx={{ marginBottom: 2 }}>Thông tin chi tiết</Typography>
+                <Box sx={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, borderBottom: '1px solid #ccc',
+                    pb: 2
+                }}>
+                    <Typography variant="h6">Thông tin chi tiết</Typography>
+                    <MangaHotForm is_hot={is_hot} onChange={handleHotChange} sx={{ flexShrink: 0, display: "flex" }} />
+                </Box>
                 <MangaNameForm sx={{ marginBottom: 2 }} name={name} onChange={handleNameChange} />
                 <MangaSubNameForm sx={{ marginBottom: 2 }} name={nameAlt} onChange={handleNameAltChange} />
-                <MangaTypeForm type={type} onChange={setType} placeholder="" isSearchMode={isSearchMode} onInputChange={handleInputChange} />
+                <MangaTypeForm type={type} onChange={handleTypeChange} placeholder="" isSearchMode={isSearchMode} onInputChange={handleInputChange} />
                 <MangaActionForm sx={{ marginBottom: 2 }} text={finishedBy} onChange={handleFinishedByChange} />
                 <MangaCategoryForm sx={{ marginBottom: 1 }} props={genres} onChange={handleGenresChange} />
                 <MangaPilotForm sx={{ marginBottom: 5 }} text={pilot} onChange={handlePilotChange} />
-            </CardContent>
-        </Card>
+            </CardContent >
+        </Card >
     )
 
 });
