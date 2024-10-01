@@ -4,7 +4,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@m
 
 interface MangaApprovalProps {
     value?: string;
-    onChange?: (event: SelectChangeEvent<string>) => void;
+    onChange?: (value: string) => void;
 }
 const states = [
     {
@@ -22,6 +22,11 @@ const states = [
 ];
 
 const MangaApprovalForm: React.FC<MangaApprovalProps> = ({ value, onChange }) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
+        if (onChange) {
+            onChange(event.target.value);
+        }
+    };
     return (
         <>
             <InputLabel sx={{ fontSize: "16px", mb: "0px", color: "#000" }}>Duyệt</InputLabel>
@@ -31,7 +36,7 @@ const MangaApprovalForm: React.FC<MangaApprovalProps> = ({ value, onChange }) =>
                     label="State"
                     name="state"
                     value={value}
-                    onChange={onChange}
+                    onChange={handleChange}
                     fullWidth
                     sx={{
                         height: '50px',

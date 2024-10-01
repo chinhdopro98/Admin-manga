@@ -95,7 +95,7 @@ const MangaDetail: React.FC = () => {
   }, [error, router]);
   return (
     <Box>
-      <LoadingPopup open={loading} bgDark={bgDark} />
+      <LoadingPopup open={loading} bgDark={bgDark ? 'rgba(0, 0, 0, 0.3)' : undefined} />
       <Stack spacing={3}>
         <Stack sx={{ flex: '1 1 auto', borderBottom: "1px solid #484848", pb: 1 }}>
           <Grid container alignItems="center">

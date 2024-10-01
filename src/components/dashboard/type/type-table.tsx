@@ -47,7 +47,6 @@ export function TypeMangaTable({
           </TableHead>
           <TableBody>
             {types.map((type) => {
-              console.log(type, 21312312)
               return (
                 <TableRow hover key={type.id} >
                   <TableCell>{type.id}</TableCell>

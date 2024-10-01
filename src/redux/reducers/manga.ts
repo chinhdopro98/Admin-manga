@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import {
+  deleteManga,
   deleteManyChapter,
   deleteSingleChapter,
   getChapterdetail,
@@ -47,6 +48,10 @@ const MangaSlice = createSlice({
     deletePannel(state, action) {
       const index = action.payload;
       state?.chapter?.content?.splice(index, 1);
+    },
+    deleteSlotManga(state, action) {
+      const id = action.payload;
+      state.mangas = state.mangas.filter((manga) => manga.id !== id);
     },
     onCloseToastManga(state) {
       state.showError = false;
@@ -160,10 +165,24 @@ const MangaSlice = createSlice({
       .addCase(deleteManyChapter.rejected, (state, action) => {
         state.error = action.error.message;
         state.showError = true;
+      })
+
+      .addCase(deleteManga.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteManga.fulfilled, (state, action) => {
+        state.showSuccess = true;
+        state.loading = false;
+      })
+      .addCase(deleteManga.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.showError = true;
+        state.loading = false;
       });
   },
 });
 
-export const { changePanelPosition, deletePannel, onCloseToastManga, deleteChapters } = MangaSlice.actions;
+export const { changePanelPosition, deletePannel, onCloseToastManga, deleteChapters, deleteSlotManga } =
+  MangaSlice.actions;
 export const { reducer: mangaReducer } = MangaSlice;
 export default MangaSlice.reducer;

@@ -4,18 +4,29 @@ import { chapterApi, mangaApi } from '../../api/admin';
 import { deleteApi, getApi, postApiFormData, updateApi } from '../../api/axios';
 import { ChapterUpdatePayload, GetAllChapterParams, GetAllMangaParams, GetMangaSingle } from '../interfaces/interfaces';
 
-export const getMangas = createAsyncThunk(
-  'manga/get-all',
-  async ({ page, per_page, sort, include }: GetAllMangaParams) => {
-    const res = await getApi(mangaApi, {
-      page,
-      per_page,
-      sort,
-      include,
+const buildQueryParams = (params: GetAllMangaParams) => {
+  const query = new URLSearchParams();
+
+  if (params.page) query.append('page', params.page.toString());
+  if (params.per_page) query.append('per_page', params.per_page.toString());
+  if (params.sort) query.append('sort', params.sort);
+  if (params.include) query.append('include', params.include);
+
+  if (params.data) {
+    Object.keys(params.data).forEach((key) => {
+      const value = params.data?.[key as keyof typeof params.data];
+      if (value) query.append(`filter[${key}]`, value);
     });
-    return res;
   }
-);
+
+  return query.toString();
+};
+
+export const getMangas = createAsyncThunk('manga/get-all', async (params: GetAllMangaParams) => {
+  const queryParams = buildQueryParams(params);
+  const res = await getApi(`${mangaApi}?${queryParams}`);
+  return res;
+});
 
 export const getMangaSingle = createAsyncThunk('manga/get-one', async ({ include, id }: GetMangaSingle) => {
   const url = `${mangaApi}/${id}`;
@@ -69,7 +80,6 @@ export const updateManga = createAsyncThunk('manga/update', async ({ id, data }:
 });
 
 export const deleteSingleChapter = createAsyncThunk('chapter/delete-one', async (id: string) => {
-  console.log(12312312);
   const url = `${chapterApi}/${id}`;
   await deleteApi(url);
 });
@@ -78,4 +88,9 @@ export const deleteManyChapter = createAsyncThunk('chapter/delete-many', async (
   const url = `${chapterApi}/delete-many`;
   const response = await updateApi(url, ids);
   return response?.data;
+});
+
+export const deleteManga = createAsyncThunk('manga/delete-one', async (id: string) => {
+  const url = `${mangaApi}/${id}`;
+  await deleteApi(url);
 });

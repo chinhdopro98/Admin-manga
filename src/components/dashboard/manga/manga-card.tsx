@@ -14,9 +14,10 @@ import { Trash } from '@phosphor-icons/react/dist/ssr/Trash';
 
 export interface MangaCardProps {
   manga: IManga;
+  onDelete: () => void;
 }
 
-export function MangaCard({ manga }: MangaCardProps): React.JSX.Element {
+export function MangaCard({ manga, onDelete }: MangaCardProps): React.JSX.Element {
   const typographySx: SxProps<Theme> = {
     display: '-webkit-box',
     WebkitLineClamp: 5,
@@ -24,26 +25,29 @@ export function MangaCard({ manga }: MangaCardProps): React.JSX.Element {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textAlign: 'justify',
+    fontSize: "12px"
   };
 
   const typographyName: SxProps<Theme> = {
     display: '-webkit-box',
     WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
-    fontSize: "23px",
+    fontSize: "18px",
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    textAlign: 'justify'
+    textAlign: 'justify',
+    lineHeight: "1.3"
   };
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }} >
-      <CardContent sx={{ flex: '1 1 auto', padding: '20px 24px' }}>
+      <CardContent sx={{ flex: '1 1 auto', padding: '15px 18px' }}>
         <Stack spacing={2}>
           <Box sx={{ display: "flex" }}>
-            <Box sx={{ width: "180px", flexShrink: 0, position: "relative" }}>
-              <img src={manga.cover_full_url} style={{ width: "100%", height: "220px" }} />
+            <Box sx={{ width: "150px", flexShrink: 0, position: "relative" }}>
+              <img src={manga.cover_full_url} style={{ width: "100%", height: "200px" }} />
               <Button
                 variant="contained"
+                onClick={onDelete}
                 sx={{
                   position: "absolute",
                   bottom: 1,
@@ -51,11 +55,12 @@ export function MangaCard({ manga }: MangaCardProps): React.JSX.Element {
                   right: "50%",
                   transform: "translate(-50%,-50%)",
                   '& span': { mb: 0, mt: 0, lineHeight: "normal" },
-                  borderRadius: 1,
+                  borderRadius: "3px",
                   minWidth: 22,
+                  padding: "5px 16px"
                 }}
               >
-                <Tooltip title="Xóa">
+                <Tooltip title="Xóa" sx={{ mt: "1px" }}>
                   <span>
                     <Trash fontSize="var(--icon-fontSize-md)" />
                   </span>
@@ -63,15 +68,15 @@ export function MangaCard({ manga }: MangaCardProps): React.JSX.Element {
               </Button>
             </Box>
             <Stack spacing={1} sx={{ flex: 1, ml: 2 }}>
-              <Typography align="center" variant="h5" sx={typographyName}>
-                <Link href={paths.dashboard.mangaDetail(manga.id)}>
+              <Typography align="center" variant="h6" sx={typographyName}>
+                <Link href={paths.dashboard.mangaDetail(manga.id)} style={{ textDecoration: "none" }}>
                   {manga.name}
                 </Link>
               </Typography>
               <Box>
                 {
                   manga?.genres?.map((genre) => (
-                    <Chip key={genre?.id} label={genre.name} sx={{ background: '#2e95ea;', fontSize: '10px', height: '25px', lineHeight: '25px', mr: "5px", fontWeight: "bold" }} />
+                    <Chip key={genre?.id} label={genre.name} sx={{ background: '#2e95ea;', fontSize: '8px', height: '20px', lineHeight: '20px', mr: "5px", fontWeight: "bold" }} />
                   ))
                 }
               </Box>

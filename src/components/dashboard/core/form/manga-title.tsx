@@ -1,23 +1,37 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Box, FormControl, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
+import useDebounce from '@/hooks/use-hook-debound';
 
 interface MangaTileProps {
-    name?: string | '';
+    name: string | '';
     sx?: React.CSSProperties;
     showIcon?: boolean;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: (value: string) => void
 }
 
-export const MangaTitleForm: React.FC<MangaTileProps> = React.memo(({ name, sx, showIcon = false, onChange }) => {
+export const MangaTitleForm: React.FC<MangaTileProps> = ({ name, sx, showIcon = false, onChange }) => {
+    const [inputValue, setInputValue] = React.useState<string>(name || '');
+    React.useEffect(() => {
+        setInputValue(name);
+    }, [name]);
+    const debouncedValue = useDebounce(inputValue);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+    React.useEffect(() => {
+        if (debouncedValue) {
+            onChange(debouncedValue)
+        }
+    }, [debouncedValue]);
     return (
         <Box sx={sx}>
             <InputLabel sx={{ fontSize: "15px", mb: "5px", color: "#000" }}>Tên truyện, tên khác</InputLabel>
             <FormControl fullWidth>
                 <OutlinedInput
-                    value={name}
+                    value={inputValue}
                     fullWidth
-                    onChange={onChange}
+                    onChange={handleChange}
                     placeholder="Tên truyện, tên khác"
                     startAdornment={
                         showIcon && (
@@ -35,4 +49,4 @@ export const MangaTitleForm: React.FC<MangaTileProps> = React.memo(({ name, sx, 
             </FormControl>
         </Box>
     );
-});
+};

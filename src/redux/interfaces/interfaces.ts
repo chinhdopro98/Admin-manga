@@ -65,6 +65,14 @@ export interface GetAllMangaParams {
   per_page?: number;
   sort?: string;
   include?: string;
+  data?: {
+    search?: string;
+    group_id?: string;
+    artist_id?: string;
+    user_id?: string;
+    doujinshi_id?: string;
+    is_reviewed?: string;
+  };
 }
 
 export interface GetAllChapterParams {
