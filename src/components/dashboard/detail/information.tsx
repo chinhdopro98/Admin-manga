@@ -18,7 +18,7 @@ interface MangaDetailProps {
 export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onChange }) => {
     const [name, setName] = useState<string>(manga?.name || '');
     const [nameAlt, setNameAlt] = useState<string>(manga?.name_alt || '');
-    const [type, setType] = useState<IType | null>(null);
+    const [type, setType] = useState<IType | null>(manga?.doujinshi || null);
     const [finishedBy, setFinishedBy] = useState<string>(manga?.finished_by || '');
     const [genres, setGenres] = useState<ICategory[] | null>(manga?.genres || []);
     const [pilot, setPilot] = useState<string>(manga?.pilot || '');
@@ -27,7 +27,10 @@ export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onCh
     const handleInputChange = () => {
         setIsSearchMode(false);
     };
-    const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value), []);
+    const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+        if (e.target.value !== manga?.name) onChange('name', e.target.value);
+    }, []);
     const handleNameAltChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setNameAlt(e.target.value), []);
     const handlePilotChange = useCallback((value: string) => setPilot(value), []);
     const handleFinishedByChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setFinishedBy(e.target.value), []);
@@ -38,7 +41,8 @@ export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onCh
 
     const handleTypeChange = (newType: IType | null) => {
         setType(newType);
-        onChange('doujinshi_id', newType?.id)
+        onChange('doujinshi_id', newType?.id);
+        onChange('doujinshi', newType);
     };
 
     const handleHotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,14 +50,9 @@ export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onCh
         onChange('is_hot', event.target.checked)
     };
 
-    const debouncedName = useDebounce(name);
     const debouncedNameAlt = useDebounce(nameAlt);
     const debouncedPilot = useDebounce(pilot);
     const debouncedActionChange = useDebounce(finishedBy);
-
-    useEffect(() => {
-        if (debouncedName !== manga?.name) onChange('name', debouncedName);
-    }, [debouncedName]);
 
     useEffect(() => {
         if (debouncedNameAlt !== manga?.name_alt) onChange('name_alt', debouncedNameAlt);
@@ -84,15 +83,15 @@ export const InformationDetail: React.FC<MangaDetailProps> = memo(({ manga, onCh
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, borderBottom: '1px solid #ccc',
                     pb: 2
                 }}>
-                    <Typography variant="h6">Thông tin chi tiết</Typography>
+                    <Typography variant="h6" sx={{ fontSize: "17px" }}>Thông tin chi tiết</Typography>
                     <MangaHotForm is_hot={is_hot} onChange={handleHotChange} sx={{ flexShrink: 0, display: "flex" }} />
                 </Box>
                 <MangaNameForm sx={{ marginBottom: 2 }} name={name} onChange={handleNameChange} />
                 <MangaSubNameForm sx={{ marginBottom: 2 }} name={nameAlt} onChange={handleNameAltChange} />
-                <MangaTypeForm type={type} onChange={handleTypeChange} placeholder="" isSearchMode={isSearchMode} onInputChange={handleInputChange} />
+                <MangaTypeForm sx={{ marginBottom: 2 }} type={type} onChange={handleTypeChange} placeholder="" isSearchMode={isSearchMode} onInputChange={handleInputChange} />
                 <MangaActionForm sx={{ marginBottom: 2 }} text={finishedBy} onChange={handleFinishedByChange} />
                 <MangaCategoryForm sx={{ marginBottom: 1 }} props={genres} onChange={handleGenresChange} />
-                <MangaPilotForm sx={{ marginBottom: 5 }} text={pilot} onChange={handlePilotChange} />
+                <MangaPilotForm sx={{ marginBottom: 4 }} text={pilot} onChange={handlePilotChange} />
             </CardContent >
         </Card >
     )

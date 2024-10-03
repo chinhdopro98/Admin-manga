@@ -1,3 +1,5 @@
+import AddManga from './app/dashboard/mangas/add/page';
+
 export const paths = {
   home: '/',
   auth: { signIn: '/auth/sign-in', signUp: '/auth/sign-up', resetPassword: '/auth/reset-password' },
@@ -16,6 +18,8 @@ export const paths = {
     comments: '/dashboard/comments',
     mangaDetail: (id: string) => `/dashboard/mangas/${id}`,
     chapterDetail: (mangaId?: string, chapterId?: string) => `/dashboard/mangas/${mangaId}/chapters/${chapterId}`,
+    addChapter: (mangaId?: string) => `/dashboard/mangas/${mangaId}/chapters/add`,
+    addManga: () => `/dashboard/mangas/add`,
   },
   errors: { notFound: '/errors/not-found' },
 } as const;

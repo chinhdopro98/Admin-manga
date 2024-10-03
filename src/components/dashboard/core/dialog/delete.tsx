@@ -1,21 +1,27 @@
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 
-interface DeleteConfirmationModalProps {
+interface ConfirmDeleteDialogProps {
     open: boolean;
     onClose: () => void;
     onConfirm: () => void;
-    itemName: string;
+    name?: string;
     message?: string;
 }
 
-const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open, onClose, onConfirm, itemName, message }) => {
+const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({ open, onClose, onConfirm, name, message }) => {
     return (
         <Dialog
             open={open}
             onClose={onClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            sx={{
+                '& .MuiDialog-paper': {
+                    maxWidth: '450px',
+                    width: '100%',
+                },
+            }}
         >
             <DialogTitle id="alert-dialog-title">{"Xác nhận xóa"}</DialogTitle>
             <DialogContent>
@@ -26,7 +32,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open,
                         <>
                             Bạn có chắc chắn muốn xóa{" "}
                             <Typography component="span" sx={{ color: '#635bff', fontWeight: 'bold' }}>
-                                {itemName}
+                                {name}
                             </Typography>{" "}
                             không?
                         </>
@@ -54,4 +60,4 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open,
     );
 };
 
-export default DeleteConfirmationModal;
+export default ConfirmDeleteDialog;

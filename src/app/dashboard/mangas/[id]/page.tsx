@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import { useParams } from 'next/navigation';
 import LoadingPopup from '@/components/core/loadding';
@@ -15,9 +15,10 @@ import dayjs from 'dayjs';
 import AvatarView from '@/components/dashboard/detail/avatar-view';
 import Contributors from '@/components/dashboard/detail/contributors';
 import { InformationDetail } from '@/components/dashboard/detail/information';
-import { IMangaData } from '@/redux/interfaces/interfaces';
+import { IManga } from '@/redux/interfaces/interfaces';
 import AlertNotification from '@/components/core/toast';
 import { onCloseToastManga } from '@/redux/reducers/manga';
+import ErrorDialog from "@/components/dashboard/core/dialog/error";
 
 const MangaDetail: React.FC = () => {
   const router = useRouter();
@@ -29,8 +30,13 @@ const MangaDetail: React.FC = () => {
   const chapters = useAppSelector((state: RootState) => state.manga.chapters);
   const showSuccess = useAppSelector((state: RootState) => state.manga.showSuccess);
   const showError = useAppSelector((state: RootState) => state.manga.showError);
-  const [bgDark, setBgDark] = React.useState(false);
-  const [mangaData, setMangaData] = React.useState<IMangaData>({
+  const [bgDark, setBgDark] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  const [mangaData, setMangaData] = useState<IManga>({
     name: '',
     name_alt: '',
     doujinshi_id: '',
@@ -41,10 +47,14 @@ const MangaDetail: React.FC = () => {
     is_hot: false,
     status: 0,
     user_id: '',
-    artist_id: ''
+    artist_id: '',
+    doujinshi: undefined,
+    artist: undefined,
+    group: undefined,
+    user: undefined
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (manga) {
       setMangaData({
         name: manga.name || '',
@@ -58,20 +68,28 @@ const MangaDetail: React.FC = () => {
         status: manga.status || 0,
         user_id: manga.user_id || '',
         artist_id: manga.artist_id || '',
+        doujinshi: manga?.doujinshi || undefined,
+        artist: manga?.artist || undefined,
+        group: manga.group || undefined,
+        user: manga.user || undefined
       });
     }
   }, [manga]);
   const handleSubmit = () => {
-    setBgDark(true);
-    const filteredMangaData = Object.fromEntries(
-      Object.entries(mangaData).filter(([_, value]) => value !== null && value !== '')
-    );
-    dispatch(updateManga({
-      id,
-      data: filteredMangaData
-    })).finally(() => setBgDark(false));
+    if (!mangaData?.name) {
+      setOpenDialog(true);
+    } else {
+      setBgDark(true);
+      const filteredMangaData = Object.fromEntries(
+        Object.entries(mangaData).filter(([_, value]) => value !== null && value !== '')
+      );
+      dispatch(updateManga({
+        id,
+        data: filteredMangaData
+      })).finally(() => setBgDark(false));
+    }
   };
-  const handleMangaDataChange = React.useCallback((field: string, value: any) => {
+  const handleMangaDataChange = useCallback((field: string, value: any) => {
     setMangaData(prevState => ({
       ...prevState,
       [field]: value,
@@ -80,7 +98,7 @@ const MangaDetail: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const mangaId = Array.isArray(id) ? id[0] : id;
     if (mangaId && (!manga || manga.id !== mangaId)) {
       dispatch(getMangaSingle({ include, id: mangaId }));
@@ -88,11 +106,22 @@ const MangaDetail: React.FC = () => {
     }
   }, [dispatch, id, manga]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (error) {
       router.push('/not-found');
     }
   }, [error, router]);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <Box>
       <LoadingPopup open={loading} bgDark={bgDark ? 'rgba(0, 0, 0, 0.3)' : undefined} />
@@ -121,12 +150,21 @@ const MangaDetail: React.FC = () => {
             <Chapters chapters={chapters} mangaId={manga?.id} />
           </Grid>
           <Grid item lg={4} md={6} xs={12}>
-            <AvatarView manga={manga} />
+            <AvatarView
+              imagePreview={imagePreview}
+              manga={manga}
+              onImageChange={handleImageChange}
+            />
             <Contributors manga={manga} onChange={handleMangaDataChange} />
           </Grid>
         </Grid>
       </Stack>
       <AlertNotification showError={showError} showSuccess={showSuccess} onClose={onCloseToastManga} />
+      <ErrorDialog
+        open={openDialog}
+        handleClose={handleCloseDialog}
+        message="Vui lòng nhập kiểm tra lại thông tin."
+      />
     </Box>
   );
 };

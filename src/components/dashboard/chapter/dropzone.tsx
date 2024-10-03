@@ -4,9 +4,10 @@ import { UploadSimple } from '@phosphor-icons/react/dist/ssr';
 import { Box } from '@mui/material';
 interface ImageDropzoneProps {
     onDropImages: (images: FileWithPath[]) => void;
+    text: string
 }
 
-const ImageDropzone: React.FC<ImageDropzoneProps> = ({ onDropImages }) => {
+const ImageDropzone: React.FC<ImageDropzoneProps> = ({ onDropImages, text }) => {
     const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
         const images = acceptedFiles.map((file) =>
             Object.assign(file, {
@@ -39,8 +40,8 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ onDropImages }) => {
                 <p>Thả ảnh vào đây...</p>
             ) : (
                 <Box>
-                    <UploadSimple size={35} /> 
-                    <p>Kéo thả ảnh vào đây hoặc bấm để chọn ảnh</p>
+                    <UploadSimple size={35} />
+                    <p>{text}</p>
                 </Box>
             )}
         </div>

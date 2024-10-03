@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { chapterApi, mangaApi } from '../../api/admin';
-import { deleteApi, getApi, postApiFormData, updateApi } from '../../api/axios';
+import { deleteApi, getApi, postApi, postApiFormData, updateApi } from '../../api/axios';
 import { ChapterUpdatePayload, GetAllChapterParams, GetAllMangaParams, GetMangaSingle } from '../interfaces/interfaces';
 
 const buildQueryParams = (params: GetAllMangaParams) => {
@@ -93,4 +93,11 @@ export const deleteManyChapter = createAsyncThunk('chapter/delete-many', async (
 export const deleteManga = createAsyncThunk('manga/delete-one', async (id: string) => {
   const url = `${mangaApi}/${id}`;
   await deleteApi(url);
+});
+
+export const createManga = createAsyncThunk('manga/create', async ({ data }: any, { rejectWithValue }) => {
+  const genres = data?.genres?.map((item: any) => item.id);
+  data.genres = genres;
+  const response = await postApi(mangaApi, data);
+  return response;
 });

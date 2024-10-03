@@ -5,7 +5,7 @@ import { IManga } from '@/redux/interfaces/interfaces';
 
 interface MangaListProps {
     mangas: IManga[];
-    onDelete: (id: string) => void;
+    onDelete: (manga: IManga) => void;
 }
 
 const MangaList: React.FC<MangaListProps> = memo(({ mangas, onDelete }) => {
@@ -13,7 +13,7 @@ const MangaList: React.FC<MangaListProps> = memo(({ mangas, onDelete }) => {
         <Grid container spacing={3}>
             {mangas.map((manga) => (
                 <Grid key={manga.id} lg={6} md={6} xs={12}>
-                    <MangaCard manga={manga} onDelete={() => onDelete(manga.id)} />
+                    <MangaCard manga={manga} onDelete={() => onDelete(manga)} />
                 </Grid>
             ))}
         </Grid>

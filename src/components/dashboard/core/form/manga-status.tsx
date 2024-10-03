@@ -20,19 +20,18 @@ interface MangaStatusProps {
 
 export const MangaStatusForm: React.FC<MangaStatusProps> = ({ status, sx, onChange }) => {
     const handleChange = (event: SelectChangeEvent<number>) => {
-        onChange(Number(event.target.value)); 
+        onChange(Number(event.target.value));
     };
-
     return (
         <Box sx={sx}>
             <InputLabel sx={{ fontSize: "15px", mb: "3px", color: "#000" }}>Trạng thái</InputLabel>
             <FormControl fullWidth variant="outlined">
                 <Select
                     labelId="state-label"
-                    value={status !== null && status !== undefined ? status : ""} 
+                    value={status !== null && status !== undefined ? status : ""}
                     label="State"
                     name="state"
-                    onChange={handleChange}  
+                    onChange={handleChange}
                     fullWidth
                     sx={{
                         height: '45px',

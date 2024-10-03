@@ -38,26 +38,47 @@ export function MangaCard({ manga, onDelete }: MangaCardProps): React.JSX.Elemen
     textAlign: 'justify',
     lineHeight: "1.3"
   };
+
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }} >
+    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <CardContent sx={{ flex: '1 1 auto', padding: '15px 18px' }}>
         <Stack spacing={2}>
           <Box sx={{ display: "flex" }}>
-            <Box sx={{ width: "150px", flexShrink: 0, position: "relative" }}>
+            <Box sx={{
+              width: "150px", flexShrink: 0, position: "relative",
+              '&:hover .delete-button': { visibility: 'visible', opacity: 1 }
+            }}>
               <img src={manga.cover_full_url} style={{ width: "100%", height: "200px" }} />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '200px',
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease',
+                  '&:hover': { opacity: 1 },
+                  '&:hover + .delete-button': { visibility: 'visible', opacity: 1 }
+                }}
+              />
               <Button
                 variant="contained"
                 onClick={onDelete}
+                className="delete-button"
                 sx={{
                   position: "absolute",
                   bottom: 1,
                   left: "50%",
-                  right: "50%",
                   transform: "translate(-50%,-50%)",
                   '& span': { mb: 0, mt: 0, lineHeight: "normal" },
                   borderRadius: "3px",
-                  minWidth: 22,
-                  padding: "5px 16px"
+                  minWidth: 21,
+                  padding: "5px 10px !important",
+                  visibility: 'hidden',
+                  opacity: 0,
+                  transition: 'visibility 0s, opacity 0.2s linear',
                 }}
               >
                 <Tooltip title="Xóa" sx={{ mt: "1px" }}>
@@ -69,7 +90,7 @@ export function MangaCard({ manga, onDelete }: MangaCardProps): React.JSX.Elemen
             </Box>
             <Stack spacing={1} sx={{ flex: 1, ml: 2 }}>
               <Typography align="center" variant="h6" sx={typographyName}>
-                <Link href={paths.dashboard.mangaDetail(manga.id)} style={{ textDecoration: "none" }}>
+                <Link href={paths.dashboard.mangaDetail(manga?.id as string)} style={{ textDecoration: "none" }}>
                   {manga.name}
                 </Link>
               </Typography>
@@ -81,7 +102,7 @@ export function MangaCard({ manga, onDelete }: MangaCardProps): React.JSX.Elemen
                 }
               </Box>
               <Typography align="center" variant="body1" sx={{ ...typographySx, mb: 0, '& p': { mb: 0, mt: 0 } }}>
-                <Box component="span" dangerouslySetInnerHTML={{ __html: manga.pilot }} sx={{ mb: 0 }} />
+                <Box component="span" dangerouslySetInnerHTML={{ __html: manga.pilot as string }} sx={{ mb: 0 }} />
               </Typography>
             </Stack>
           </Box>

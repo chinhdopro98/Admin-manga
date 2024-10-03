@@ -8,7 +8,7 @@ import { IChapter } from '@/redux/interfaces/interfaces';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { paths } from '@/paths';
-import DeleteConfirmationModal from '../core/model/delete-model';
+import ConfirmDeleteDialog from '../core/dialog/delete';
 import { useAppDispatch } from '@/hooks/use-hook-redux';
 import { deleteChapters } from '@/redux/reducers/manga';
 import { deleteManyChapter, deleteSingleChapter } from '@/redux/actions/manga';
@@ -100,13 +100,15 @@ const Chapters: React.FC<ChapterProps> = ({ chapters = [], mangaId }) => {
                                         Xóa
                                     </Button>
                                 )}
-                                <Button
-                                    startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />}
-                                    variant="contained"
-                                    sx={{ borderRadius: "5px", minWidth: "100px", height: "40px" }}
-                                >
-                                    Tạo mới
-                                </Button>
+                                <Link href={paths.dashboard.addChapter(mangaId)}>
+                                    <Button
+                                        startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />}
+                                        variant="contained"
+                                        sx={{ borderRadius: "5px", minWidth: "100px", height: "40px" }}
+                                    >
+                                        Tạo mới
+                                    </Button>
+                                </Link>
                             </Box>
                         }
                     />
@@ -170,11 +172,11 @@ const Chapters: React.FC<ChapterProps> = ({ chapters = [], mangaId }) => {
             </Card>
 
             {(selectedChapter || selectedChapters.length > 0) && (
-                <DeleteConfirmationModal
+                <ConfirmDeleteDialog
                     open={openModal}
                     onClose={handleCloseModal}
                     onConfirm={handleConfirmDelete}
-                    itemName={getDeleteModalTitle()}
+                    name={getDeleteModalTitle()}
                 />
             )}
         </>

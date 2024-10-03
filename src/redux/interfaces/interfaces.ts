@@ -103,32 +103,32 @@ export interface ChapterUpdatePayload {
 }
 
 export interface IManga {
-  id: string;
-  user_id: string;
-  artist_id: string | null;
-  last_chapter_id: string;
-  doujinshi_id: string | null;
-  group_id: string | null;
-  name: string;
-  name_alt: string;
-  pilot: string;
-  status: number;
-  views: number;
-  views_day: number;
-  is_hot: boolean;
-  hot_at: string | null;
-  is_reviewed: number;
-  slug: string;
-  finished_by: string | null;
-  created_at: string;
-  updated_at: string;
-  views_week: number;
-  cover_full_url: string;
+  id?: string;
+  user_id?: string;
+  artist_id?: string | null;
+  last_chapter_id?: string;
+  doujinshi_id?: string | null;
+  group_id?: string | null;
+  name?: string;
+  name_alt?: string;
+  pilot?: string;
+  status?: number;
+  views?: number;
+  views_day?: number;
+  is_hot?: boolean;
+  hot_at?: string | null;
+  is_reviewed?: number;
+  slug?: string;
+  finished_by?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  views_week?: number;
+  cover_full_url?: string;
   group?: IGroup;
-  user: IUser;
+  user?: IUser;
   genres?: ICategory[] | null;
   artist?: IAuthor;
-  doujinshi: IType;
+  doujinshi?: IType;
   finishedBy?: string;
 }
 

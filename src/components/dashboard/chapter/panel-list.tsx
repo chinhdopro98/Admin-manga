@@ -7,18 +7,36 @@ import { ContentChap } from "@/redux/interfaces/interfaces";
 import { useAppDispatch } from "@/hooks/use-hook-redux";
 
 interface PanelListProps {
+    isUpdate?: boolean;
     chapterContent: ContentChap[];
+    onDragEndProp?: (sourceIndex: number, destinationIndex: number) => void;
+    deletePanelProp?: (index: number) => void;
 }
 
-const PanelList: React.FC<PanelListProps> = memo(({ chapterContent }) => {
+const PanelList: React.FC<PanelListProps> = memo(({ chapterContent, isUpdate = true, onDragEndProp, deletePanelProp }) => {
     const dispatch = useAppDispatch();
     const onDragEnd = useCallback((result: any) => {
         if (!result.destination || result.source.index === result.destination.index) return;
-        dispatch(changePanelPosition({ sourceIndex: result.source.index, destinationIndex: result.destination.index }));
-    }, [dispatch]);
+
+        if (isUpdate) {
+            dispatch(changePanelPosition({ sourceIndex: result.source.index, destinationIndex: result.destination.index }));
+        } else {
+            if (onDragEndProp) {
+                onDragEndProp(result.source.index, result.destination.index);
+            }
+        }
+    }, [dispatch, isUpdate, onDragEndProp]);
+
     const deletePanel = useCallback((index: number) => {
-        dispatch(deletePannel(index));
-    }, [dispatch]);
+        if (isUpdate) {
+            dispatch(deletePannel(index));
+        } else {
+            if (deletePanelProp) {
+                deletePanelProp(index);
+            }
+        }
+    }, [dispatch, isUpdate, deletePanelProp]);
+
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>

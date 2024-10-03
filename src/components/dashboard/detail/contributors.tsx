@@ -25,17 +25,20 @@ const Contributors: React.FC<MangaDetailProps> = ({ manga, onChange }) => {
 
     const handleAuthorChange = (newAuthor: IAuthor | null) => {
         setAuthor(newAuthor);
-        onChange('artist_id', newAuthor?.id)
+        onChange('artist_id', newAuthor?.id);
+        onChange('artist', newAuthor);
     };
 
     const handleGroupChange = (newGroup: IGroup | null) => {
         setGroup(newGroup);
-        onChange('group_id', newGroup?.id)
+        onChange('group_id', newGroup?.id);
+        onChange('group', newGroup);
     };
 
     const handleCreatorChange = (newCreator: IUser | null) => {
         setCreator(newCreator);
-        onChange('user_id', newCreator?.id)
+        onChange('user_id', newCreator?.id);
+        onChange('user', newCreator)
     };
 
     const handleStatusChange = (newStatus: number | null) => {

@@ -1,43 +1,35 @@
-"use client";
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Button, Card, CardContent, Typography } from '@mui/material';
-import { IManga } from '@/redux/interfaces/interfaces';
 import { UploadSimple } from '@phosphor-icons/react/dist/ssr';
+import { IManga } from '@/redux/interfaces/interfaces';
 
 interface MangaDetailProps {
     manga?: IManga | null;
+    imagePreview: string | null;
+    onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const AvatarView: React.FC<MangaDetailProps> = ({ manga }) => {
-    const [imagePreview, setImagePreview] = React.useState<string | null>(null);
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
+const AvatarView: React.FC<MangaDetailProps> = ({ manga, imagePreview, onImageChange }) => {
     return (
         <Card>
             <CardContent>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>Ảnh bìa</Typography>
+                <Typography variant="h5" sx={{ marginBottom: 2, fontSize: "17px" }}>Ảnh bìa</Typography>
                 <Box sx={{ width: "200px", margin: 'auto', textAlign: "center" }}>
-                    <img
-                        alt="cover"
-                        className="cover"
-                        src={imagePreview || manga?.cover_full_url}
-                        style={{ maxWidth: '100%', height: 'auto' }}
-                    />
+                    {
+                        (manga?.cover_full_url || imagePreview) && (
+                            <img
+                                alt="cover"
+                                className="cover"
+                                src={imagePreview || manga?.cover_full_url}
+                                style={{ maxWidth: '100%', height: 'auto' }}
+                            />
+                        )
+                    }
                     <input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageChange}
+                        onChange={onImageChange}
                         style={{ display: 'none' }}
                         id="file-input"
                     />

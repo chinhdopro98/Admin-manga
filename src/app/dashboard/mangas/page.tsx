@@ -11,10 +11,13 @@ import { useAppDispatch, useAppSelector } from '@/hooks/use-hook-redux';
 import { RootState } from '@/redux/stores';
 import { deleteManga, getMangas } from '@/redux/actions/manga';
 import LoadingPopup from '@/components/core/loadding';
-import { IAuthor, IGroup, IType, IUser } from '@/redux/interfaces/interfaces';
+import { IAuthor, IGroup, IManga, IType, IUser } from '@/redux/interfaces/interfaces';
 import MangaList from '@/components/dashboard/manga/manga-list';
 import MangaFilters from '@/components/dashboard/manga/manga-filters';
 import { deleteSlotManga } from '@/redux/reducers/manga';
+import ConfirmDeleteDialog from '@/components/dashboard/core/dialog/delete';
+import Link from 'next/link';
+import { paths } from '@/paths';
 
 export default function Page(): React.JSX.Element {
   const dispatch = useAppDispatch();
@@ -32,6 +35,8 @@ export default function Page(): React.JSX.Element {
   const [group, setGroup] = useState<IGroup | null>(null)
   const [author, setAuthor] = useState<IAuthor | null>(null);
   const [approve, setApprove] = useState<string | ''>('0');
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [targetManga, setTargetManga] = useState<IManga | null>(null);
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
     dispatch(getMangas({ page: value, per_page: rowsPerPage, sort, include }));
@@ -82,11 +87,28 @@ export default function Page(): React.JSX.Element {
     }));
   };
 
-  const handleDelete = (id: string) => {
-    setBgDark(true);
-    dispatch(deleteSlotManga(id))
-    dispatch(deleteManga(id));
+
+  const handleDelete = (manga: IManga) => {
+    setTargetManga(manga);
+    setOpenModalDelete(true);
   };
+
+  const handleCloseModal = () => {
+    setOpenModalDelete(false);
+    setTargetManga(null);
+  };
+
+
+  const handleConfirmDelete = () => {
+    if (targetManga && targetManga?.id) {
+      setBgDark(true);
+      dispatch(deleteSlotManga(targetManga.id));
+      dispatch(deleteManga(targetManga?.id));
+      setOpenModalDelete(false);
+      setTargetManga(null);
+    }
+  };
+
 
   return (
     <Box>
@@ -97,18 +119,20 @@ export default function Page(): React.JSX.Element {
             <Typography variant="h5" sx={{ fontSize: "20px" }}>Danh sách truyện</Typography>
           </Stack>
           <div>
-            <Button
-              startIcon={<PlusIcon style={{ fontSize: '16px' }} />}
-              variant="contained"
-              sx={{
-                padding: '4px 10px',
-                fontSize: '14px',
-                minWidth: 'auto',
-                borderRadius: "5px"
-              }}
-            >
-              Tạo mới
-            </Button>
+            <Link href={paths.dashboard.addManga()}>
+              <Button
+                startIcon={<PlusIcon style={{ fontSize: '16px' }} />}
+                variant="contained"
+                sx={{
+                  padding: '4px 10px',
+                  fontSize: '14px',
+                  minWidth: 'auto',
+                  borderRadius: "5px"
+                }}
+              >
+                Tạo mới
+              </Button>
+            </Link>
           </div>
         </Stack>
         <MangaFilters
@@ -126,6 +150,12 @@ export default function Page(): React.JSX.Element {
           <Pagination count={Math.ceil((pagination.total / rowsPerPage))} page={page} size="small" onChange={handleChangePage} />
         </Box>
       </Stack>
+      <ConfirmDeleteDialog
+        open={openModalDelete}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+        name={targetManga ? targetManga.name : 'item'}
+      />
     </Box>
   );
 }
