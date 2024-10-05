@@ -106,11 +106,11 @@ const MangaDetail: React.FC = () => {
     }
   }, [dispatch, id, manga]);
 
-  useEffect(() => {
-    if (error) {
-      router.push('/not-found');
-    }
-  }, [error, router]);
+  // useEffect(() => {
+  //   if (error) {
+  //     router.push('/not-found');
+  //   }
+  // }, [error, router]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

@@ -90,7 +90,7 @@ export function MangaCard({ manga, onDelete }: MangaCardProps): React.JSX.Elemen
             </Box>
             <Stack spacing={1} sx={{ flex: 1, ml: 2 }}>
               <Typography align="center" variant="h6" sx={typographyName}>
-                <Link href={paths.dashboard.mangaDetail(manga?.id as string)} style={{ textDecoration: "none" }}>
+                <Link href={paths.dashboard.mangaDetail(manga?.id as string)} style={{ textDecoration: "none" }} prefetch={false}>
                   {manga.name}
                 </Link>
               </Typography>

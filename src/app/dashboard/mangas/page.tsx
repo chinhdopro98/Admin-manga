@@ -34,7 +34,7 @@ export default function Page(): React.JSX.Element {
   const [type, setType] = useState<IType | null>(null);
   const [group, setGroup] = useState<IGroup | null>(null)
   const [author, setAuthor] = useState<IAuthor | null>(null);
-  const [approve, setApprove] = useState<string | ''>('0');
+  const [approve, setApprove] = useState<string | ''>('');
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [targetManga, setTargetManga] = useState<IManga | null>(null);
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -119,7 +119,7 @@ export default function Page(): React.JSX.Element {
             <Typography variant="h5" sx={{ fontSize: "20px" }}>Danh sách truyện</Typography>
           </Stack>
           <div>
-            <Link href={paths.dashboard.addManga()}>
+            <Link href={paths.dashboard.addManga()} prefetch={false}>
               <Button
                 startIcon={<PlusIcon style={{ fontSize: '16px' }} />}
                 variant="contained"

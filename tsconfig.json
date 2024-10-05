@@ -14,15 +14,21 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": "./src",  // Thêm baseUrl để chỉ định gốc là src
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["*"]  // Điều chỉnh lại để các alias đúng từ thư mục src
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts", 
+    "src/**/*.ts", 
+    "src/**/*.tsx", 
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

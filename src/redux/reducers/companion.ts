@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { CompanionState } from '../interfaces/interfaces';
 import { getCompanions } from '../actions/companion';
+import { CompanionState } from '../interfaces/interfaces';
 
 const initialState: CompanionState = {
   loading: false,
@@ -15,6 +15,8 @@ const initialState: CompanionState = {
     totalPages: 0,
   },
   error: '',
+  showSuccess: false,
+  showError: false,
 };
 
 const CompanionSlice = createSlice({

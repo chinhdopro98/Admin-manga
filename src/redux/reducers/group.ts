@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getGroups, searchGroups } from '../actions/group';
+import { createGroup, deleteGroup, getGroups, searchGroups, updateGroup } from '../actions/group';
 import { GroupState } from '../interfaces/interfaces';
 
 const initialState: GroupState = {
@@ -15,6 +15,8 @@ const initialState: GroupState = {
     totalPages: 0,
   },
   error: '',
+  showSuccess: false,
+  showError: false,
 };
 
 const GroupSlice = createSlice({
@@ -23,6 +25,17 @@ const GroupSlice = createSlice({
   reducers: {
     resetGroups: (state) => {
       state.groups = [];
+    },
+    onCloseToastGroup(state) {
+      state.showError = false;
+      state.showSuccess = false;
+    },
+    deleteGroupItem(state, action) {
+      state.groups = state.groups.filter((item) => item.id !== action.payload);
+    },
+    changeGroupItem(state, action) {
+      const { id, name } = action.payload;
+      state.groups = state.groups.map((item) => (item.id === id ? { ...item, name: name } : item));
     },
   },
   extraReducers: (builder) => {
@@ -53,9 +66,48 @@ const GroupSlice = createSlice({
       .addCase(searchGroups.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      .addCase(updateGroup.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateGroup.fulfilled, (state, action) => {
+        state.loading = false;
+        state.showSuccess = true;
+      })
+      .addCase(updateGroup.rejected, (state, action) => {
+        state.loading = false;
+        state.showError = true;
+        state.error = action.error.message;
+      })
+
+      .addCase(deleteGroup.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteGroup.fulfilled, (state, action) => {
+        state.loading = false;
+        state.showSuccess = true;
+      })
+      .addCase(deleteGroup.rejected, (state, action) => {
+        state.loading = false;
+        state.showError = true;
+        state.error = action.error.message;
+      })
+
+      .addCase(createGroup.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createGroup.fulfilled, (state, action) => {
+        state.loading = false;
+        state.showSuccess = true;
+      })
+      .addCase(createGroup.rejected, (state, action) => {
+        state.showError = true;
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
-export const { resetGroups } = GroupSlice.actions;
+export const { resetGroups, onCloseToastGroup, deleteGroupItem, changeGroupItem } = GroupSlice.actions;
 export const { reducer: groupReducer } = GroupSlice;
 export default GroupSlice.reducer;

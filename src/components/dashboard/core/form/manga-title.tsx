@@ -20,9 +20,7 @@ export const MangaTitleForm: React.FC<MangaTileProps> = ({ name, sx, showIcon = 
         setInputValue(e.target.value);
     };
     React.useEffect(() => {
-        if (debouncedValue) {
-            onChange(debouncedValue)
-        }
+        onChange(debouncedValue)
     }, [debouncedValue]);
     return (
         <Box sx={sx}>

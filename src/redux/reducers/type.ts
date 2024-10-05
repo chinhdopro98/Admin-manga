@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getTypes, searchTypes } from '../actions/type';
+import { createType, deleteType, getTypes, searchTypes, updateType } from '../actions/type';
 import { TypeState } from '../interfaces/interfaces';
 
 const initialState: TypeState = {
@@ -15,6 +15,8 @@ const initialState: TypeState = {
     totalPages: 0,
   },
   error: '',
+  showSuccess: false,
+  showError: false,
 };
 
 const TypeMangaSlice = createSlice({
@@ -23,6 +25,17 @@ const TypeMangaSlice = createSlice({
   reducers: {
     resetTypes: (state) => {
       state.types = [];
+    },
+    onCloseToastType(state) {
+      state.showError = false;
+      state.showSuccess = false;
+    },
+    deleteTypeItem(state, action) {
+      state.types = state.types.filter((item) => item.id !== action.payload);
+    },
+    changeTypeItem(state, action) {
+      const { id, name } = action.payload;
+      state.types = state.types.map((item) => (item.id === id ? { ...item, name: name } : item));
     },
   },
   extraReducers: (builder) => {
@@ -53,9 +66,48 @@ const TypeMangaSlice = createSlice({
       .addCase(searchTypes.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      .addCase(updateType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateType.fulfilled, (state, action) => {
+        state.loading = false;
+        state.showSuccess = true;
+      })
+      .addCase(updateType.rejected, (state, action) => {
+        state.loading = false;
+        state.showError = true;
+        state.error = action.error.message;
+      })
+
+      .addCase(deleteType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteType.fulfilled, (state, action) => {
+        state.loading = false;
+        state.showSuccess = true;
+      })
+      .addCase(deleteType.rejected, (state, action) => {
+        state.loading = false;
+        state.showError = true;
+        state.error = action.error.message;
+      })
+
+      .addCase(createType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createType.fulfilled, (state, action) => {
+        state.loading = false;
+        state.showSuccess = true;
+      })
+      .addCase(createType.rejected, (state, action) => {
+        state.showError = true;
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
-export const { resetTypes } = TypeMangaSlice.actions;
+export const { resetTypes, onCloseToastType, deleteTypeItem, changeTypeItem } = TypeMangaSlice.actions;
 export const { reducer: typeReducer } = TypeMangaSlice;
 export default TypeMangaSlice.reducer;

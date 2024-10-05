@@ -29,7 +29,6 @@ export const MangaStatusForm: React.FC<MangaStatusProps> = ({ status, sx, onChan
                 <Select
                     labelId="state-label"
                     value={status !== null && status !== undefined ? status : ""}
-                    label="State"
                     name="state"
                     onChange={handleChange}
                     fullWidth

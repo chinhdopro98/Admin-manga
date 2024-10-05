@@ -9,6 +9,7 @@ interface NotificationProps {
 }
 
 const AlertNotification: React.FC<NotificationProps> = memo(({ showSuccess, showError, onClose }) => {
+    console.log('AlertNotification')
     const dispatch = useAppDispatch();
     const [visible, setVisible] = useState(showSuccess || showError);
     useEffect(() => {
@@ -53,4 +54,8 @@ const AlertNotification: React.FC<NotificationProps> = memo(({ showSuccess, show
     );
 });
 
-export default AlertNotification;
+const areEqual = (prevProps: NotificationProps, nextProps: NotificationProps) => {
+    return prevProps.showError === nextProps.showError && prevProps.showSuccess === nextProps.showSuccess;
+};
+
+export default React.memo(AlertNotification, areEqual);

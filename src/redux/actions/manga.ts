@@ -86,7 +86,7 @@ export const deleteSingleChapter = createAsyncThunk('chapter/delete-one', async 
 
 export const deleteManyChapter = createAsyncThunk('chapter/delete-many', async (ids: string[]) => {
   const url = `${chapterApi}/delete-many`;
-  const response = await updateApi(url, ids);
+  const response = await updateApi(url, { ids: ids });
   return response?.data;
 });
 

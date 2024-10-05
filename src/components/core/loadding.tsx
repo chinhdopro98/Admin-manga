@@ -5,7 +5,9 @@ interface loading {
   open: boolean;
   bgDark?: string;
 }
+
 const LoadingPopup = ({ open, bgDark = 'rgba(255, 255, 255, 1)' }: loading) => {
+  console.log('Loading')
   return (
     <Backdrop
       open={open}
@@ -25,4 +27,4 @@ const LoadingPopup = ({ open, bgDark = 'rgba(255, 255, 255, 1)' }: loading) => {
   );
 };
 
-export default LoadingPopup;
+export default React.memo(LoadingPopup);

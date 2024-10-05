@@ -9,8 +9,8 @@ import { ICategory } from '@/redux/interfaces/interfaces';
 import { Box, FormControl, InputLabel } from '@mui/material';
 
 interface MangaCategoryProps {
-  props?: ICategory[] | null;  
-  onChange: (selectedCategories: ICategory[]) => void; 
+  props?: ICategory[] | null;
+  onChange: (selectedCategories: ICategory[]) => void;
   sx?: React.CSSProperties;
 }
 
@@ -59,7 +59,7 @@ export const MangaCategoryForm: React.FC<MangaCategoryProps> = ({ props = [], on
                   />
                 }
                 label={category.name}
-                sx={{ fontSize: '14px', mr: '8px' }} 
+                sx={{ fontSize: '14px', mr: '8px' }}
               />
             )
           ))}

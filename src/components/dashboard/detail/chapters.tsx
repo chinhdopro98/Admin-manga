@@ -100,7 +100,7 @@ const Chapters: React.FC<ChapterProps> = ({ chapters = [], mangaId }) => {
                                         Xóa
                                     </Button>
                                 )}
-                                <Link href={paths.dashboard.addChapter(mangaId)}>
+                                <Link href={paths.dashboard.addChapter(mangaId)} prefetch={false}>
                                     <Button
                                         startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />}
                                         variant="contained"
@@ -148,7 +148,7 @@ const Chapters: React.FC<ChapterProps> = ({ chapters = [], mangaId }) => {
                                             </TableCell>
                                             <TableCell>
                                                 <Box display="flex" gap={1}>
-                                                    <Link href={paths.dashboard.chapterDetail(mangaId, chapter.id)} passHref>
+                                                    <Link href={paths.dashboard.chapterDetail(mangaId, chapter.id)} prefetch={false}>
                                                         <Button variant="outlined" sx={{ minWidth: "40px", p: 0, height: "30px", borderRadius: "5px" }}>
                                                             <PencilSimpleLine size={16} />
                                                         </Button>

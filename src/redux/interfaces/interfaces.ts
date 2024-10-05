@@ -166,6 +166,7 @@ export interface GetAllCategoryParams {
   page: number;
   per_page: number;
   sort?: string;
+  name?: string;
 }
 
 export interface CategoryState {
@@ -173,6 +174,8 @@ export interface CategoryState {
   categories: ICategory[];
   pagination: Pagination;
   error?: string | null;
+  showSuccess: boolean;
+  showError: boolean;
 }
 
 export interface ICategory {
@@ -191,6 +194,7 @@ export interface GetAllAuthorParams {
   per_page: number;
   sort?: string;
   include?: string;
+  name?: string;
 }
 
 export interface AuthorState {
@@ -198,6 +202,8 @@ export interface AuthorState {
   authors: IAuthor[];
   pagination: Pagination;
   error?: string | null;
+  showSuccess: boolean;
+  showError: boolean;
 }
 
 export interface IAuthor {
@@ -223,6 +229,8 @@ export interface TypeState {
   types: IType[];
   pagination: Pagination;
   error?: string | null;
+  showSuccess: boolean;
+  showError: boolean;
 }
 
 export interface IType {
@@ -241,6 +249,7 @@ export interface GetAllGroupParams {
   per_page: number;
   sort?: string;
   include?: string;
+  name?: string;
 }
 
 export interface GroupState {
@@ -248,6 +257,8 @@ export interface GroupState {
   groups: IGroup[];
   pagination: Pagination;
   error?: string | null;
+  showSuccess: boolean;
+  showError: boolean;
 }
 
 export interface IGroup {
@@ -297,6 +308,7 @@ export interface GetAllCompanionParams {
   per_page: number;
   sort?: string;
   include?: string;
+  name?: string;
 }
 
 export interface CompanionState {
@@ -304,6 +316,8 @@ export interface CompanionState {
   companions: ICompanion[];
   pagination: Pagination;
   error?: string | null;
+  showSuccess: boolean;
+  showError: boolean;
 }
 
 export interface ICompanion {
